@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('dns').setDefaultResultOrder('ipv4first');
 const express = require('express');
 const mongoose = require('mongoose');
 // Removed express-session and connect-mongo
