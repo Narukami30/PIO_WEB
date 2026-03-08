@@ -1,0 +1,39 @@
+<%- include('../partials/notificationBanner') %>
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center fade-up">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-5">
+            <div class="icon-wrapper mx-auto mb-4" style="width:80px;height:80px;font-size:2rem;background:#d4edda;color:#198754;">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="fw-bold text-success">Complaint Submitted!</h2>
+            <p class="lead text-muted">Your complaint has been successfully filed.</p>
+
+            <div class="p-4 rounded-4 my-4" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
+              <p class="text-muted mb-1 small">Your Tracking Code:</p>
+              <h1 class="text-primary fw-bold"><%= trackingCode %></h1>
+              <p class="text-muted small mb-0">Please save this code to track your complaint status.</p>
+            </div>
+
+            <div class="alert alert-light border rounded-3 text-start small">
+              <h6 class="fw-bold"><i class="fas fa-info-circle me-1 text-primary"></i> What happens next?</h6>
+              <ol class="mb-0 ps-3">
+                <li class="mb-1">Your complaint will be reviewed by the relevant department.</li>
+                <li class="mb-1">A staff member will be assigned to handle your case.</li>
+                <li class="mb-1">You can track progress using your tracking code.</li>
+                <li>Updates will be posted as the complaint is processed.</li>
+              </ol>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+              <a href="/track-complaint" class="btn btn-primary rounded-pill px-4"><i class="fas fa-search me-2"></i>Track Complaint</a>
+              <a href="/" class="btn btn-outline-secondary rounded-pill px-4"><i class="fas fa-home me-2"></i>Go Home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

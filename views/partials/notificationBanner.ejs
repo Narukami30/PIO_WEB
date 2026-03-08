@@ -1,0 +1,37 @@
+<% if (typeof notification !== 'undefined' && notification && notification.message) { %>
+  <div class="notification-banner <%= notification.type || 'info' %>">
+    <div class="banner-shell">
+      <span class="banner-icon">
+        <% if (notification.type === 'success') { %><i class="fas fa-check-circle"></i>
+        <% } else if (notification.type === 'error') { %><i class="fas fa-times-circle"></i>
+        <% } else if (notification.type === 'warning') { %><i class="fas fa-exclamation-triangle"></i>
+        <% } else { %><i class="fas fa-info-circle"></i><% } %>
+      </span>
+      <div class="banner-body">
+        <div class="banner-label">
+          <% if (notification.type === 'success') { %>Success
+          <% } else if (notification.type === 'error') { %>Error
+          <% } else if (notification.type === 'warning') { %>Warning
+          <% } else { %>Notice<% } %>
+        </div>
+        <div class="banner-text"><%= notification.message %></div>
+      </div>
+      <button type="button" class="btn-close banner-close" aria-label="Close"></button>
+    </div>
+    <div class="banner-progress"><div class="banner-progress-inner"></div></div>
+  </div>
+<% } %>
+
+<% if (typeof confirmation_msg !== 'undefined' && confirmation_msg) { %>
+  <div class="notification-banner confirmation-banner success">
+    <div class="banner-shell">
+      <span class="banner-icon"><i class="fas fa-check-circle"></i></span>
+      <div class="banner-body">
+        <div class="banner-label">Success</div>
+        <div class="banner-text"><%= confirmation_msg %></div>
+      </div>
+      <button type="button" class="btn-close banner-close" aria-label="Close"></button>
+    </div>
+    <div class="banner-progress"><div class="banner-progress-inner"></div></div>
+  </div>
+<% } %>

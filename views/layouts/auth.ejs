@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' : '' %><%= appName %></title>
+  <link rel="icon" type="image/png" href="<%= typeof siteLogo !== 'undefined' && siteLogo ? siteLogo : '/uploads/images/pio-logo.png' %>">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0b2838 0%, #0f4c75 40%, #3282b8 100%);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+    .auth-page::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(240,165,0,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .auth-page::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(50,130,184,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .auth-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 420px;
+      padding: 1.5rem;
+    }
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-brand-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .auth-brand-icon::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(240,165,0,0.4), transparent 60%);
+      z-index: -1;
+    }
+    .auth-brand-icon i {
+      font-size: 1.75rem;
+      background: linear-gradient(135deg, #f0a500, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .auth-brand h4 {
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+    .auth-brand p {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin: 0;
+      font-weight: 500;
+    }
+    .auth-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.2);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .auth-card .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.4rem;
+    }
+    .auth-card .form-control {
+      border-radius: 12px;
+      padding: 0.65rem 1rem;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      background: rgba(255,255,255,0.05);
+      color: #e2e8f0;
+    }
+    .auth-card .input-icon-wrap .form-control {
+      padding-left: 2.6rem;
+    }
+    .auth-card .form-control:focus {
+      border-color: var(--naujan-secondary, #42a5f5);
+      box-shadow: 0 0 0 3px rgba(66,165,245,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .auth-card .form-control::placeholder {
+      color: rgba(255,255,255,0.3);
+    }
+    .auth-card .btn-primary {
+      border-radius: 12px;
+      padding: 0.7rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+      background: linear-gradient(135deg, var(--naujan-primary, #0f4c75), var(--naujan-secondary, #3282b8));
+      border: none;
+      box-shadow: 0 4px 16px rgba(15,76,117,0.3);
+      transition: all 0.2s ease;
+    }
+    .auth-card .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(15,76,117,0.4);
+    }
+    .auth-card .input-group-text {
+      border-radius: 12px 0 0 12px;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-right: none;
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.4);
+    }
+    .auth-card .input-group .form-control {
+      border-radius: 0 12px 12px 0;
+      border-left: none;
+    }
+    .auth-card .input-group .form-control:focus + .input-group-text,
+    .auth-card .input-group:focus-within .input-group-text {
+      border-color: var(--naujan-secondary, #42a5f5);
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .auth-footer a {
+      color: rgba(255,255,255,0.35);
+      font-size: 0.78rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .auth-footer a:hover {
+      color: rgba(255,255,255,0.7);
+    }
+    .auth-alert {
+      border-radius: 12px;
+      border: none;
+      font-size: 0.85rem;
+      padding: 0.75rem 1rem;
+      backdrop-filter: blur(10px);
+    }
+    .auth-alert.alert-success {
+      background: rgba(25,135,84,0.12);
+      color: #fff;
+      border-left: 3px solid rgba(25,135,84,0.7);
+    }
+    .auth-alert.alert-danger {
+      background: rgba(220,53,69,0.12);
+      color: #fff;
+      border-left: 3px solid rgba(220,53,69,0.7);
+    }
+    /* Floating particles */
+    .auth-particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+      animation: authFloat 20s infinite ease-in-out;
+    }
+    .auth-particle:nth-child(1) { width: 120px; height: 120px; top: 10%; left: 5%; animation-delay: 0s; }
+    .auth-particle:nth-child(2) { width: 80px; height: 80px; top: 60%; right: 8%; animation-delay: -5s; }
+    .auth-particle:nth-child(3) { width: 60px; height: 60px; bottom: 15%; left: 15%; animation-delay: -10s; }
+    @keyframes authFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(-20px) rotate(5deg); }
+      66% { transform: translateY(10px) rotate(-3deg); }
+    }
+
+    /* Auth mobile responsive */
+    @media (max-width: 576px) {
+      .auth-container {
+        padding: 1rem 0.75rem;
+        max-width: 100%;
+      }
+      .auth-brand-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 1.2rem;
+      }
+      .auth-brand h4 {
+        font-size: 1.1rem;
+      }
+      .auth-brand p {
+        font-size: 0.72rem;
+      }
+      .auth-card {
+        padding: 1.25rem 1rem;
+        border-radius: 16px;
+      }
+      .auth-card h5 {
+        font-size: 1rem;
+      }
+      .auth-card .form-control {
+        font-size: 0.85rem;
+        padding: 0.55rem 0.7rem;
+      }
+      .auth-card .input-group-text {
+        padding: 0.55rem 0.7rem;
+        font-size: 0.85rem;
+      }
+      .auth-card .btn-primary {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+      }
+      .auth-alert {
+        font-size: 0.78rem;
+        padding: 0.6rem 0.85rem;
+      }
+      .auth-particle {
+        display: none;
+      }
+      .auth-footer a {
+        font-size: 0.72rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .auth-card {
+        padding: 1rem 0.85rem;
+      }
+      .auth-brand-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <!-- Floating particles -->
+    <div class="auth-particle"></div>
+    <div class="auth-particle"></div>
+    <div class="auth-particle"></div>
+
+    <div class="auth-container">
+      <!-- Branding -->
+      <div class="auth-brand">
+        <div class="auth-brand-icon">
+          <i class="fas fa-landmark"></i>
+        </div>
+        <h4>Public Information Office Naujan</h4>
+        <p>Administration Portal</p>
+      </div>
+
+      <!-- Flash Messages -->
+      <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+        <div class="alert auth-alert alert-success alert-dismissible fade show">
+          <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" style="font-size:0.65rem;"></button>
+        </div>
+      <% } %>
+      <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+        <div class="alert auth-alert alert-danger alert-dismissible fade show">
+          <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" style="font-size:0.65rem;"></button>
+        </div>
+      <% } %>
+      <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <div class="alert auth-alert alert-danger alert-dismissible fade show">
+          <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" style="font-size:0.65rem;"></button>
+        </div>
+      <% } %>
+
+      <div class="auth-card">
+        <%- body %>
+      </div>
+
+      <div class="auth-footer">
+        <a href="/"><i class="fas fa-arrow-left me-1"></i> Back to website</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

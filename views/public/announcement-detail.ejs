@@ -1,0 +1,237 @@
+<%- include('../partials/notificationBanner') %>
+
+<!-- Print-only header (hidden on screen) -->
+<div class="ann-print-header" style="display:none;">
+  <img src="<%= typeof siteLogo !== 'undefined' && siteLogo ? siteLogo : '/uploads/images/pio-logo.png' %>" alt="PIO Logo">
+  <div class="ann-print-header-text">
+    <p class="ann-print-header-org">Public Information Office &mdash; Naujan</p>
+    <p class="ann-print-header-sub">Municipality of Naujan, Oriental Mindoro &bull; Official Publication</p>
+  </div>
+</div>
+
+<!-- Reading progress bar -->
+<div class="ann-progress-bar" id="readingProgress"></div>
+
+<!-- Minimal breadcrumb bar -->
+<section class="ann-breadcrumb-bar">
+  <div class="container-xl">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/announcements">News</a></li>
+        <li class="breadcrumb-item active"><%= announcement.category.charAt(0).toUpperCase() + announcement.category.slice(1) %></li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section class="py-4 pb-5">
+  <div class="container-xl">
+    <div class="row g-4 g-lg-5">
+
+      <!-- ===== MAIN ARTICLE COLUMN ===== -->
+      <div class="col-lg-8 col-xl-9 fade-up">
+
+        <!-- Article header -->
+        <header class="ann-header">
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="ann-cat-tag"><%= announcement.category.charAt(0).toUpperCase() + announcement.category.slice(1) %></span>
+            <% if (announcement.isPinned) { %><span class="ann-pin-tag"><i class="fas fa-thumbtack me-1"></i>Pinned</span><% } %>
+          </div>
+          <h1 class="ann-headline"><%= announcement.title %></h1>
+          <% if (announcement.excerpt) { %>
+            <p class="ann-subhead"><%= announcement.excerpt %></p>
+          <% } %>
+          <div class="ann-byline">
+            <div class="ann-byline-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="ann-byline-info">
+              <% if (announcement.createdBy) { %>
+                <span class="ann-byline-name">By <%= announcement.createdBy.firstName %> <%= announcement.createdBy.lastName %></span>
+              <% } else { %>
+                <span class="ann-byline-name">By PIO Naujan</span>
+              <% } %>
+              <% if (announcement.department) { %>
+                <span class="ann-byline-dept"><%= announcement.department.name %></span>
+              <% } %>
+            </div>
+            <div class="ann-byline-right">
+              <span class="ann-byline-date"><i class="far fa-calendar-alt me-1"></i><%= formatDate(announcement.publishedAt || announcement.createdAt) %></span>
+              <% const plainText = (announcement.content || '').replace(/<[^>]+>/g,''); const wordCount = plainText.trim().split(/\s+/).length; const readMin = Math.max(1, Math.ceil(wordCount / 200)); %>
+              <span class="ann-byline-read"><i class="far fa-clock me-1"></i><%= readMin %> min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Share + tools bar -->
+        <div class="ann-tools-bar">
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="ann-tool-btn" title="Print article" id="btnPrintArticle"><i class="fas fa-print"></i></button>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="ann-font-label">Aa</span>
+            <button type="button" class="ann-tool-btn ann-font-btn" data-size="small" title="Small text">A<sup>-</sup></button>
+            <button type="button" class="ann-tool-btn ann-font-btn active" data-size="medium" title="Normal text">A</button>
+            <button type="button" class="ann-tool-btn ann-font-btn" data-size="large" title="Large text">A<sup>+</sup></button>
+          </div>
+        </div>
+
+        <!-- Featured image -->
+        <% if (announcement.image) { %>
+          <figure class="ann-featured-figure">
+            <img src="<%= announcement.image %>" alt="<%= announcement.title %>" class="ann-featured-img">
+            <figcaption class="ann-featured-caption"><i class="fas fa-camera me-1"></i> <%= announcement.title %></figcaption>
+          </figure>
+        <% } %>
+
+        <!-- Article body -->
+        <article class="ann-article-body" id="articleBody">
+          <div class="announcement-content">
+            <%- announcement.content %>
+          </div>
+        </article>
+
+        <!-- Attachments -->
+        <% if (announcement.attachments && announcement.attachments.length > 0) { %>
+          <div class="ann-attachments">
+            <h6 class="fw-bold mb-3"><i class="fas fa-paperclip me-2" style="color:var(--naujan-gold);"></i>Downloads & Attachments</h6>
+            <div class="d-flex flex-column gap-2">
+              <% announcement.attachments.forEach(att => { %>
+                <a href="<%= att.path %>" class="ann-attach-item" download>
+                  <div class="ann-attach-icon"><i class="fas fa-file-alt"></i></div>
+                  <span class="ann-attach-name"><%= att.originalName || att.filename %></span>
+                  <i class="fas fa-download ann-attach-dl"></i>
+                </a>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Tags / bottom meta -->
+        <div class="ann-bottom-meta">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">TAGS:</span>
+            <span class="ann-tag"><%= announcement.category %></span>
+            <% if (announcement.department) { %><span class="ann-tag"><%= announcement.department.name %></span><% } %>
+            <span class="ann-tag">Naujan</span>
+          </div>
+          <div class="text-end" style="font-size:0.78rem;color:var(--text-muted);">
+            <i class="far fa-eye me-1"></i><%= announcement.views %> views
+          </div>
+        </div>
+
+        <!-- Bottom share -->
+        <div class="ann-bottom-share">
+          <span style="font-size:0.8rem;font-weight:600;color:var(--text-muted);"><i class="fas fa-share-alt me-2"></i>Share this article</span>
+          <div class="d-flex gap-2">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent((typeof req !== 'undefined' && req.get ? 'https://' + req.get('host') : '') + '/announcements/' + announcement.slug) %>" target="_blank" rel="noopener" class="ann-share-circle" style="background:#1877F2;" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.youtube.com/@NaujanPIO" target="_blank" rel="noopener" class="ann-share-circle" style="background:#FF0000;" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <button type="button" class="ann-share-circle" style="background:var(--naujan-primary);" title="Copy" id="btnCopyLink2"><i class="fas fa-link"></i></button>
+          </div>
+        </div>
+
+        <!-- Print-only footer (hidden on screen) -->
+        <div class="ann-print-footer" style="display:none;">
+          Printed from PIO Naujan &mdash; <%= typeof siteUrl !== 'undefined' && siteUrl ? siteUrl : 'https://naujanpio.gov.ph' %> &bull; Published: <%= formatDate(announcement.publishedAt || announcement.createdAt) %>
+        </div>
+
+      </div>
+
+      <!-- ===== SIDEBAR ===== -->
+      <div class="col-lg-4 col-xl-3 fade-up">
+        <div class="ann-sidebar-sticky">
+
+          <!-- Latest news -->
+          <% if (related && related.length > 0) { %>
+            <div class="ann-side-block">
+              <div class="ann-side-block-header">
+                <span class="ann-side-block-title">Related Articles</span>
+                <a href="/announcements" class="ann-side-viewall">View All <i class="fas fa-chevron-right ms-1"></i></a>
+              </div>
+              <% related.forEach((r, ri) => { %>
+                <a href="/announcements/<%= r.slug %>" class="ann-side-story">
+                  <% if (r.image) { %>
+                    <img src="<%= r.image %>" class="ann-side-story-img" alt="<%= r.title %>">
+                  <% } else { %>
+                    <div class="ann-side-story-img ann-side-story-placeholder"><i class="fas fa-newspaper"></i></div>
+                  <% } %>
+                  <div class="ann-side-story-text">
+                    <span class="ann-side-story-cat"><%= r.category %></span>
+                    <p class="ann-side-story-title"><%= r.title %></p>
+                    <span class="ann-side-story-date"><%= formatDate(r.publishedAt || r.createdAt, 'short') %></span>
+                  </div>
+                </a>
+              <% }) %>
+            </div>
+          <% } %>
+
+          <!-- Newsletter CTA -->
+          <div class="ann-side-cta">
+            <i class="fas fa-bell" style="font-size:1.5rem;color:var(--naujan-gold);margin-bottom:8px;"></i>
+            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:4px;">Stay Updated</h6>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">Follow us for the latest news and advisories from PIO Naujan.</p>
+            <a href="/contact" class="btn btn-sm w-100" style="background:var(--naujan-primary);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:0.8rem;">
+              <i class="fas fa-envelope me-1"></i> Contact Us
+            </a>
+          </div>
+
+          <!-- Back link -->
+          <a href="/announcements" class="ann-back-link">
+            <i class="fas fa-arrow-left me-2"></i>Back to All News
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script nonce="<%= cspNonce %>">
+(function(){
+  const bar = document.getElementById('readingProgress');
+  const article = document.getElementById('articleBody');
+  if(!bar || !article) return;
+  window.addEventListener('scroll', function(){
+    const rect = article.getBoundingClientRect();
+    const start = article.offsetTop - window.innerHeight;
+    const end = article.offsetTop + article.offsetHeight;
+    const scrolled = window.scrollY;
+    let pct = 0;
+    if(scrolled > start) pct = Math.min(100, ((scrolled - start) / (end - start)) * 100);
+    bar.style.width = pct + '%';
+  });
+})();
+
+// Font size toggle
+document.querySelectorAll('.ann-font-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.ann-font-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const body = document.getElementById('articleBody');
+    body.classList.remove('ann-fs-small','ann-fs-medium','ann-fs-large');
+    body.classList.add('ann-fs-' + this.dataset.size);
+  });
+});
+
+// Print article
+const printBtn = document.getElementById('btnPrintArticle');
+if(printBtn) {
+  printBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    window.print();
+  });
+}
+
+// Copy link
+const copyBtn = document.getElementById('btnCopyLink2');
+if(copyBtn) {
+  copyBtn.addEventListener('click', function(){
+    navigator.clipboard.writeText(window.location.href);
+    const orig = this.innerHTML;
+    this.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(() => this.innerHTML = orig, 2000);
+  });
+}
+</script>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complaint Report &mdash; <%= complaint.trackingCode %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @media print {
+      @page { size: 8.5in 13in; margin: 0.55in 0.7in; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff !important; }
+      .no-print { display: none !important; }
+      .report-page { margin: 0 !important; padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      font-size: 10.5pt;
+      color: #1c1c1e;
+      background: #dde3ec;
+      line-height: 1.55;
+    }
+
+    /* ---- Toolbar ---- */
+    .toolbar {
+      position: fixed; top: 0; left: 0; right: 0; height: 52px;
+      background: linear-gradient(90deg, #0a2d4d 0%, #0f4c75 100%);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; z-index: 1000;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    .toolbar-left { display: flex; align-items: center; gap: 10px; color: #fff; }
+    .toolbar-left .doc-icon {
+      width: 30px; height: 30px; background: rgba(255,255,255,0.12);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .toolbar-left .doc-label { font-size: 13px; font-weight: 600; color: #fff; }
+    .toolbar-left .doc-tracking { font-size: 11px; color: rgba(255,255,255,0.6); font-family: 'Courier New', monospace; }
+    .toolbar-right { display: flex; gap: 8px; }
+    .tbtn {
+      height: 34px; padding: 0 18px; border: none; border-radius: 7px;
+      font-size: 12.5px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; transition: all 0.18s; text-decoration: none;
+    }
+    .tbtn-print { background: #f0a500; color: #1a1a1a; }
+    .tbtn-print:hover { background: #ffc107; }
+
+    /* ---- Page wrap ---- */
+    @media screen { .page-wrap { padding: 68px 20px 40px; } }
+
+    .report-page {
+      width: 8.5in; min-height: 13in; margin: 0 auto; background: #fff;
+      padding: 0.55in 0.7in 0.6in;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.18); border-radius: 3px; position: relative;
+    }
+
+    /* ---- Document header ---- */
+    .doc-header {
+      display: flex; align-items: center; gap: 18px;
+      padding-bottom: 14px; border-bottom: 3.5px solid #0f4c75; margin-bottom: 14px;
+    }
+    .doc-header .seal-box {
+      width: 68px; height: 68px; border-radius: 50%;
+      border: 2px dashed #c0c8d4; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #aab; font-size: 9pt; text-align: center; line-height: 1.3;
+    }
+    .doc-header .header-text { flex: 1; text-align: center; }
+    .doc-header .republic-line { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 2.5px; color: #666; margin-bottom: 2px; }
+    .doc-header .municipality-name { font-size: 17pt; font-weight: 700; color: #0a2d4d; text-transform: uppercase; letter-spacing: 1.5px; line-height: 1.15; }
+    .doc-header .province-line { font-size: 8.5pt; color: #777; margin-top: 1px; }
+    .doc-header .office-line { font-size: 9.5pt; font-weight: 600; color: #0f4c75; margin-top: 4px; letter-spacing: 0.3px; }
+    .doc-header .address-line { font-size: 8pt; color: #888; margin-top: 1px; }
+
+    /* ---- Document title band ---- */
+    .doc-title-band { text-align: center; margin-bottom: 14px; }
+    .doc-title-band .doc-title {
+      display: inline-block; font-size: 12pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 4px;
+      color: #fff; background: #0f4c75; padding: 5px 32px; border-radius: 2px;
+    }
+
+    /* ---- Reference strip ---- */
+    .ref-strip {
+      display: flex; justify-content: space-between; align-items: stretch;
+      border: 1.5px solid #c8d4e0; border-radius: 5px; overflow: hidden; margin-bottom: 14px;
+    }
+    .ref-cell { flex: 1; padding: 7px 14px; border-right: 1px solid #c8d4e0; }
+    .ref-cell:last-child { border-right: none; }
+    .ref-cell .rc-label { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 2px; }
+    .ref-cell .rc-value { font-size: 10.5pt; font-weight: 700; color: #0a2d4d; }
+    .ref-cell .rc-value.mono { font-family: 'Courier New', monospace; letter-spacing: 1px; }
+    .ref-cell.status-cell { background: #eef4fb; }
+    .s-submitted { color: #1565c0; } .s-under_review { color: #6a1b9a; }
+    .s-in_progress { color: #e65100; } .s-resolved { color: #2e7d32; }
+    .s-closed { color: #555; } .s-rejected { color: #c62828; }
+
+    /* ---- Badge row ---- */
+    .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 12px; border-radius: 20px; font-size: 8pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .bp-priority-low    { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .bp-priority-medium { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+    .bp-priority-high   { background: #fff3e0; color: #bf360c; border: 1px solid #ffb74d; }
+    .bp-priority-urgent { background: #fce4ec; color: #c62828; border: 1px solid #ef9a9a; }
+    .bp-category        { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+
+    /* ---- Sections ---- */
+    .section { margin-bottom: 14px; }
+    .section-head { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+    .section-head .sh-bar { width: 4px; height: 16px; background: #0f4c75; border-radius: 2px; flex-shrink: 0; }
+    .section-head .sh-label { font-size: 8.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1.8px; color: #0f4c75; }
+    .section-head::after { content: ''; flex: 1; height: 1px; background: #d0dbe8; }
+
+    /* ---- Info tables ---- */
+    .info-table { width: 100%; border-collapse: collapse; }
+    .info-table td { padding: 4px 8px; font-size: 9.5pt; vertical-align: top; border-bottom: 1px dotted #e5e5e5; }
+    .info-table td.lbl { font-size: 8pt; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 0.4px; width: 100px; white-space: nowrap; padding-right: 12px; }
+    .info-table tr:last-child td { border-bottom: none; }
+    .two-col-info { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+
+    /* ---- Description box ---- */
+    .desc-box {
+      background: #f7f9fc; border: 1px solid #dce4ed;
+      border-left: 3.5px solid #0f4c75; border-radius: 0 4px 4px 0;
+      padding: 10px 14px; font-size: 10pt; line-height: 1.7;
+      white-space: pre-wrap; word-wrap: break-word; min-height: 52px;
+    }
+
+    /* ---- History table ---- */
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table thead th {
+      background: #0f4c75; color: #fff; font-size: 8pt; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 10px; text-align: left;
+    }
+    .history-table tbody tr:nth-child(even) td { background: #f5f8fb; }
+    .history-table tbody td { padding: 5px 10px; font-size: 9pt; border-bottom: 1px solid #dee8f0; vertical-align: top; }
+    .no-history { text-align: center; color: #aaa; font-style: italic; font-size: 9pt; padding: 12px; border: 1px dashed #ddd; border-radius: 4px; }
+
+    /* ---- Routing slip ---- */
+    .routing-slip { border: 2px solid #0f4c75; border-radius: 5px; margin-top: 16px; overflow: hidden; }
+    .routing-slip-header {
+      background: #0f4c75; color: #fff; font-size: 8.5pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px; padding: 6px 16px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .routing-slip-body { padding: 14px 16px 18px; }
+    .routing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 28px; }
+    .routing-line { border-bottom: 1.5px solid #333; height: 26px; margin-bottom: 3px; }
+    .routing-line-label { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.8px; color: #999; }
+    .routing-remarks-box { border: 1.5px solid #333; height: 52px; border-radius: 3px; margin-top: 4px; }
+
+    /* ---- Document footer ---- */
+    .doc-footer {
+      margin-top: 20px; padding-top: 8px; border-top: 1px solid #d0d8e4;
+      display: flex; justify-content: space-between; align-items: flex-end;
+      font-size: 7.5pt; color: #aaa;
+    }
+    .doc-footer .confidential-note { font-size: 7pt; color: #bbb; text-align: center; flex: 1; }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar no-print">
+    <div class="toolbar-left">
+      <div class="doc-icon">&#128196;</div>
+      <div>
+        <div class="doc-label">Complaint Report</div>
+        <div class="doc-tracking"><%= complaint.trackingCode %></div>
+      </div>
+    </div>
+    <div class="toolbar-right">
+      <button type="button" class="tbtn tbtn-print" id="btnPrint">&#128424; Print Report</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+  <div class="report-page">
+
+    <!-- Header -->
+    <div class="doc-header">
+      <div class="seal-box">PH<br>Seal</div>
+      <div class="header-text">
+        <div class="republic-line">Republic of the Philippines &bull; Province of Oriental Mindoro</div>
+        <div class="municipality-name">Municipality of Naujan</div>
+        <div class="province-line">Oriental Mindoro, MIMAROPA Region</div>
+        <div class="office-line">Public Information Office</div>
+        <div class="address-line">Municipal Hall, Santiago, Naujan, Oriental Mindoro &bull; publicinformationoffice02@gmail.com</div>
+      </div>
+      <div class="seal-box">PIO<br>Logo</div>
+    </div>
+
+    <!-- Title Band -->
+    <div class="doc-title-band">
+      <span class="doc-title">Citizen Complaint Report</span>
+    </div>
+
+    <!-- Reference Strip -->
+    <div class="ref-strip">
+      <div class="ref-cell">
+        <div class="rc-label">Tracking Code</div>
+        <div class="rc-value mono"><%= complaint.trackingCode %></div>
+      </div>
+      <div class="ref-cell">
+        <div class="rc-label">Date Filed</div>
+        <div class="rc-value"><%= formatDate(complaint.createdAt, 'short') %></div>
+      </div>
+      <div class="ref-cell status-cell">
+        <div class="rc-label">Current Status</div>
+        <div class="rc-value s-<%= complaint.status %>"><%= complaint.status.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) %></div>
+      </div>
+      <div class="ref-cell">
+        <div class="rc-label">Generated On</div>
+        <div class="rc-value" style="font-size:9pt;font-weight:500;color:#555;"><%= new Date().toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'}) %></div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="badge-row">
+      <span class="badge-pill bp-priority-<%= complaint.priority %>">Priority: <%= complaint.priority.charAt(0).toUpperCase()+complaint.priority.slice(1) %></span>
+      <span class="badge-pill bp-category">Category: <%= complaint.category.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) %></span>
+    </div>
+
+    <!-- Complainant Information -->
+    <div class="section">
+      <div class="section-head"><div class="sh-bar"></div><span class="sh-label">Complainant Information</span></div>
+      <div class="two-col-info">
+        <table class="info-table">
+          <tr><td class="lbl">Full Name</td><td><strong><%= complaint.citizenName %></strong></td></tr>
+          <tr><td class="lbl">Email</td><td><%= complaint.email || '—' %></td></tr>
+          <tr><td class="lbl">Phone</td><td><%= complaint.phone || '—' %></td></tr>
+        </table>
+        <table class="info-table">
+          <tr><td class="lbl">Barangay</td><td><%= complaint.barangay || '—' %></td></tr>
+          <tr><td class="lbl">Address</td><td><%= complaint.address || '—' %></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Complaint Details -->
+    <div class="section">
+      <div class="section-head"><div class="sh-bar"></div><span class="sh-label">Complaint Details</span></div>
+      <table class="info-table" style="margin-bottom:8px;">
+        <tr><td class="lbl">Subject</td><td><strong><%= complaint.subject %></strong></td></tr>
+      </table>
+      <div class="desc-box"><%= complaint.description %></div>
+    </div>
+
+    <!-- Assigned Department -->
+    <% if (complaint.department) { %>
+    <div class="section">
+      <div class="section-head"><div class="sh-bar"></div><span class="sh-label">Assigned Department</span></div>
+      <table class="info-table">
+        <tr>
+          <td class="lbl">Department</td>
+          <td><strong><%= complaint.department.name %></strong></td>
+          <% if (complaint.department.head) { %>
+          <td class="lbl" style="padding-left:24px;">Dept. Head</td>
+          <td><%= complaint.department.head %><%= complaint.department.headTitle ? ', ' + complaint.department.headTitle : '' %></td>
+          <% } %>
+        </tr>
+      </table>
+    </div>
+    <% } %>
+
+    <!-- Action / Update History -->
+    <div class="section">
+      <div class="section-head"><div class="sh-bar"></div><span class="sh-label">Action / Update History</span></div>
+      <% if (complaint.updates && complaint.updates.length > 0) { %>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th style="width:14%;">Date</th>
+              <th style="width:16%;">Status</th>
+              <th>Update / Remarks</th>
+              <th style="width:18%;">Updated By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% complaint.updates.forEach(upd => { %>
+            <tr>
+              <td><%= formatDate(upd.updatedAt,'short') %></td>
+              <td><%= upd.status ? upd.status.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) : '—' %></td>
+              <td><%= upd.message || '—' %></td>
+              <td><%= upd.updatedBy ? upd.updatedBy.firstName+' '+upd.updatedBy.lastName : '—' %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <div class="no-history">No updates recorded for this complaint.</div>
+      <% } %>
+    </div>
+
+    <% if (complaint.resolvedAt) { %>
+    <div class="section">
+      <table class="info-table">
+        <tr><td class="lbl">Resolved On</td><td><strong><%= formatDate(complaint.resolvedAt) %></strong></td></tr>
+      </table>
+    </div>
+    <% } %>
+
+    <!-- Department Routing Slip -->
+    <div class="routing-slip">
+      <div class="routing-slip-header">&#9654;&nbsp; Department Routing &amp; Action Slip</div>
+      <div class="routing-slip-body">
+        <div class="routing-grid">
+          <div>
+            <div class="routing-line"></div>
+            <div class="routing-line-label">Received By (Print Name)</div>
+          </div>
+          <div>
+            <div class="routing-line"></div>
+            <div class="routing-line-label">Signature over Printed Name</div>
+          </div>
+          <div>
+            <div class="routing-line"></div>
+            <div class="routing-line-label">Department / Office</div>
+          </div>
+          <div>
+            <div class="routing-line"></div>
+            <div class="routing-line-label">Date &amp; Time Received</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="routing-line-label">Action Taken / Remarks:</div>
+          <div class="routing-remarks-box"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document Footer -->
+    <div class="doc-footer">
+      <span>Generated: <%= new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}) %></span>
+      <span class="confidential-note">This document is for official use only &bull; Data Privacy Act of 2012 (R.A. 10173)</span>
+      <span>PIO &mdash; Municipality of Naujan</span>
+    </div>
+
+  </div>
+  </div>
+
+  <script nonce="<%= cspNonce %>">
+    document.getElementById('btnPrint').addEventListener('click', function() {
+      window.print();
+    });
+  </script>
+</body>
+</html>

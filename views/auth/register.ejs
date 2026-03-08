@@ -1,0 +1,45 @@
+<div class="text-center mb-3">
+  <h5 style="font-weight:800;color:#1a2332;margin-bottom:0.25rem;">Create Account</h5>
+  <p style="font-size:0.8rem;color:#888;margin:0;">Register a new admin account</p>
+</div>
+
+<% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+  <div class="alert alert-danger" style="border-radius:10px;font-size:0.85rem;border:none;background:rgba(220,53,69,0.08);">
+    <% errors.forEach(err => { %>
+      <div><i class="fas fa-exclamation-circle me-1"></i><%= err.msg %></div>
+    <% }) %>
+  </div>
+<% } %>
+
+<form action="/auth/register" method="POST">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">First Name</label>
+      <input type="text" name="firstName" class="form-control" required value="<%= typeof firstName !== 'undefined' ? firstName : '' %>">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Last Name</label>
+      <input type="text" name="lastName" class="form-control" required value="<%= typeof lastName !== 'undefined' ? lastName : '' %>">
+    </div>
+    <div class="col-12">
+      <label class="form-label">Email Address</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fas fa-envelope" style="font-size:0.8rem;"></i></span>
+        <input type="email" name="email" class="form-control" required value="<%= typeof email !== 'undefined' ? email : '' %>">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" required minlength="8" placeholder="Min 8 characters">
+      <div class="form-text" style="font-size:0.72rem;color:#999;">Must include uppercase, lowercase, number, and special character.</div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Confirm Password</label>
+      <input type="password" name="password2" class="form-control" required minlength="8">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary w-100 mt-4"><i class="fas fa-user-plus me-2"></i>Create Account</button>
+</form>
+<div class="text-center mt-3">
+  <span style="font-size:0.8rem;color:#888;">Already have an account?</span> <a href="/auth/login" style="font-size:0.8rem;font-weight:600;">Sign in</a>
+</div>

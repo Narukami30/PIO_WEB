@@ -1,0 +1,111 @@
+<!-- Page Header -->
+<div class="admin-page-header d-flex justify-content-between align-items-center">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">Announcements</li>
+      </ol>
+    </nav>
+    <h1><i class="fas fa-bullhorn"></i>Announcements</h1>
+  </div>
+  <a href="/admin/announcements/create" class="btn btn-primary" style="border-radius:10px;padding:0.5rem 1.25rem;"><i class="fas fa-plus me-1"></i>New Announcement</a>
+</div>
+
+<!-- Filters -->
+<div class="card admin-filter-card">
+  <div class="card-body">
+    <form method="GET" class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+          <option value="">All Categories</option>
+          <% ['general','notice','advisory','ordinance','resolution','executive_order','procurement','jobs','other'].forEach(cat => { %>
+            <option value="<%= cat %>" <%= query.category === cat ? 'selected' : '' %>><%= cat.replace(/_/g, ' ') %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+          <option value="">All Statuses</option>
+          <option value="published" <%= query.status === 'published' ? 'selected' : '' %>>Published</option>
+          <option value="draft" <%= query.status === 'draft' ? 'selected' : '' %>>Draft</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Search</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background:transparent;border-right:none;"><i class="fas fa-search" style="font-size:0.8rem;color:var(--text-muted);"></i></span>
+          <input type="text" name="search" class="form-control" style="border-left:none;" placeholder="Search title..." value="<%= query.search || '' %>">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100" style="border-radius:10px;"><i class="fas fa-filter me-1"></i>Filter</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card admin-card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table admin-table mb-0">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Pinned</th>
+            <th>Views</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (announcements.length === 0) { %>
+            <tr><td colspan="7" class="text-center py-4 text-muted">No announcements found</td></tr>
+          <% } else { %>
+            <% announcements.forEach(a => { %>
+              <tr>
+                <td><%= truncate(a.title, 50) %></td>
+                <td><span class="badge bg-secondary"><%= a.category.replace(/_/g, ' ') %></span></td>
+                <td><span class="badge bg-<%= a.isPublished ? 'success' : 'warning' %>"><%= a.isPublished ? 'Published' : 'Draft' %></span></td>
+                <td>
+                  <% if (a.isPinned) { %>
+                    <i class="fas fa-thumbtack text-primary"></i>
+                  <% } else { %>
+                    <span class="text-muted">—</span>
+                  <% } %>
+                </td>
+                <td><%= a.views %></td>
+                <td class="small"><%= formatDate(a.createdAt, 'short') %></td>
+                <td>
+                  <a href="/admin/announcements/<%= a._id %>/edit" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a>
+                  <form action="/admin/announcements/<%= a._id %>?_method=DELETE" method="POST" class="d-inline" data-confirm="Delete this announcement?">
+                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% if (totalPages > 1) { %>
+  <% const qp = '&category=' + (query.category || '') + '&status=' + (query.status || ''); %>
+  <nav class="mt-3">
+    <ul class="pagination justify-content-center">
+      <li class="page-item page-nav <%= currentPage <= 1 ? 'disabled' : '' %>"><a class="page-link" href="?page=<%= currentPage - 1 %><%= qp %>"><i class="fas fa-chevron-left"></i><span class="page-nav-text ms-1">Prev</span></a></li>
+      <% const delta = 2; for (let i = 1; i <= totalPages; i++) { if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) { %>
+        <li class="page-item page-num <%= i === currentPage ? 'active' : '' %> <%= (i === 1 || i === totalPages) ? 'page-edge' : '' %>"><a class="page-link" href="?page=<%= i %><%= qp %>"><%= i %></a></li>
+      <% } else if (i === currentPage - delta - 1 || i === currentPage + delta + 1) { %>
+        <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+      <% } } %>
+      <li class="page-item page-nav <%= currentPage >= totalPages ? 'disabled' : '' %>"><a class="page-link" href="?page=<%= currentPage + 1 %><%= qp %>"><span class="page-nav-text me-1">Next</span><i class="fas fa-chevron-right"></i></a></li>
+    </ul>
+  </nav>
+<% } %>

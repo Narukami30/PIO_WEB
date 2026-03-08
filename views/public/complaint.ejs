@@ -1,0 +1,109 @@
+<%- include('../partials/notificationBanner') %>
+<section class="page-header text-white">
+  <div class="container">
+    <h1><i class="fas fa-flag me-2"></i>File a Complaint</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active text-white">Complaint</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 fade-up">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4 p-md-5">
+            <form action="/complaint" method="POST">
+              <div class="d-flex align-items-center mb-4">
+                <span class="icon-wrapper me-3" style="width:40px;height:40px;font-size:1rem;">
+                  <i class="fas fa-user"></i>
+                </span>
+                <h5 class="mb-0 fw-bold">Personal Information</h5>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Full Name *</label>
+                  <input type="text" class="form-control rounded-3" name="citizenName" placeholder="Juan Dela Cruz" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email</label>
+                  <input type="email" class="form-control rounded-3" name="email" placeholder="juan@email.com">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">Phone</label>
+                  <input type="text" class="form-control rounded-3" name="phone" placeholder="09XX XXX XXXX">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">Barangay</label>
+                  <input type="text" class="form-control rounded-3" name="barangay" placeholder="Your barangay">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">Address</label>
+                  <input type="text" class="form-control rounded-3" name="address" placeholder="Street/Purok">
+                </div>
+              </div>
+
+              <hr class="my-4">
+              <div class="d-flex align-items-center mb-4">
+                <span class="icon-wrapper me-3" style="width:40px;height:40px;font-size:1rem;background:var(--naujan-gold);color:#fff;">
+                  <i class="fas fa-clipboard-list"></i>
+                </span>
+                <h5 class="mb-0 fw-bold">Complaint Details</h5>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Subject *</label>
+                  <input type="text" class="form-control rounded-3" name="subject" placeholder="Brief subject" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Category *</label>
+                  <select class="form-select rounded-3" name="category" required>
+                    <option value="infrastructure">Infrastructure</option>
+                    <option value="public_service">Public Service</option>
+                    <option value="health">Health</option>
+                    <option value="peace_and_order">Peace & Order</option>
+                    <option value="environment">Environment</option>
+                    <option value="corruption">Corruption</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Department *</label>
+                <select class="form-select rounded-3" name="department" required>
+                  <option value="" disabled selected>Select department to send complaint</option>
+                  <% departments.forEach(dept => { %>
+                    <option value="<%= dept._id %>"><%= dept.name %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Description *</label>
+                <textarea class="form-control rounded-3" name="description" rows="5" required placeholder="Please describe your complaint in detail..."></textarea>
+              </div>
+
+              <div class="alert alert-light border rounded-3 small">
+                <i class="fas fa-shield-alt me-1 text-primary"></i>
+                Your information is protected under the Data Privacy Act of 2012. A tracking code will be generated for your complaint.
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill">
+                <i class="fas fa-paper-plane me-2"></i>Submit Complaint
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="text-center mt-4 fade-up">
+          <p class="text-muted">Already filed a complaint? <a href="/track-complaint" class="fw-bold text-primary">Track it here <i class="fas fa-arrow-right ms-1"></i></a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

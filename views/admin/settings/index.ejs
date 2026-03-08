@@ -1,0 +1,344 @@
+<!-- Page Header -->
+<div class="admin-page-header">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1">
+      <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item active">Site Settings</li>
+    </ol>
+  </nav>
+  <h1><i class="fas fa-cogs"></i> Site Settings</h1>
+</div>
+
+<!-- Tab Navigation -->
+<ul class="nav nav-pills mb-4 gap-2 flex-wrap" id="settingsTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="hero-tab" data-bs-toggle="pill" data-bs-target="#heroPane" type="button" role="tab">
+      <i class="fas fa-image me-1"></i> Hero Section
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="naujan-tab" data-bs-toggle="pill" data-bs-target="#naujanPane" type="button" role="tab">
+      <i class="fas fa-mountain me-1"></i> About Naujan
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="office-tab" data-bs-toggle="pill" data-bs-target="#officePane" type="button" role="tab">
+      <i class="fas fa-landmark me-1"></i> About Office
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="team-tab" data-bs-toggle="pill" data-bs-target="#teamPane" type="button" role="tab">
+      <i class="fas fa-users me-1"></i> PIO Team
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="partners-tab" data-bs-toggle="pill" data-bs-target="#partnersPane" type="button" role="tab">
+      <i class="fas fa-handshake me-1"></i> Partner Agencies
+    </button>
+  </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="settingsTabContent">
+
+  <!-- ========== HERO SECTION ========== -->
+  <div class="tab-pane fade show active" id="heroPane" role="tabpanel">
+    <div class="card admin-card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="fas fa-image text-primary"></i>
+        <strong>Hero Section</strong>
+        <span class="badge bg-soft-primary text-primary ms-auto" style="font-size:0.7rem;">Homepage</span>
+      </div>
+      <div class="card-body p-4">
+        <form action="/admin/settings/hero" method="POST" enctype="multipart/form-data">
+          <div class="row g-4">
+            <!-- Hero Background Image -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Hero Background Image</label>
+              <p class="small mb-2" style="color:var(--text-muted);">The main background image of the homepage hero banner.</p>
+              <div class="mb-3">
+                <img src="<%= settings.heroImage %>" alt="Hero Image" class="img-fluid rounded" style="max-height:200px;object-fit:cover;width:100%;border:1px solid var(--border-color);"
+                     data-hide-on-error>
+              </div>
+              <input type="file" name="heroImage" class="form-control" accept="image/*">
+              <small class="text-muted">Recommended: 1920×1080px or larger. Leave empty to keep current.</small>
+            </div>
+            <!-- Hero Logo -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Logo / Seal</label>
+              <p class="small mb-2" style="color:var(--text-muted);">Displayed in the hero, navbar, and sidebar.</p>
+              <div class="mb-3 text-center p-3 rounded" style="background:rgba(255,255,255,0.04);border:1px solid var(--border-color);">
+                <img src="<%= settings.heroLogo %>" alt="Logo" style="max-height:150px;object-fit:contain;"
+                     data-hide-on-error>
+              </div>
+              <input type="file" name="heroLogo" class="form-control" accept="image/*">
+              <small class="text-muted">Recommended: square PNG with transparency. Leave empty to keep current.</small>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> Save Hero Settings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ABOUT NAUJAN ========== -->
+  <div class="tab-pane fade" id="naujanPane" role="tabpanel">
+    <div class="card admin-card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="fas fa-mountain text-success"></i>
+        <strong>About Naujan</strong>
+        <span class="badge bg-soft-success text-success ms-auto" style="font-size:0.7rem;">Homepage</span>
+      </div>
+      <div class="card-body p-4">
+        <form action="/admin/settings/about-naujan" method="POST" enctype="multipart/form-data">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Section Photo</label>
+              <div class="mb-3">
+                <img src="<%= settings.aboutNaujanPhoto %>" alt="About Naujan" class="img-fluid rounded" style="max-height:250px;object-fit:cover;width:100%;border:1px solid var(--border-color);"
+                     data-hide-on-error>
+              </div>
+              <input type="file" name="aboutNaujanPhoto" class="form-control" accept="image/*">
+              <small class="text-muted">Leave empty to keep current image.</small>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Section Title</label>
+                <input type="text" name="aboutNaujanTitle" class="form-control" value="<%= settings.aboutNaujanTitle %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea name="aboutNaujanDescription" class="form-control" rows="8" placeholder="Enter description about Naujan municipality..."><%= settings.aboutNaujanDescription %></textarea>
+                <small class="text-muted">This text appears in the "About Naujan" section on the homepage.</small>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i> Save About Naujan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ABOUT OFFICE ========== -->
+  <div class="tab-pane fade" id="officePane" role="tabpanel">
+    <div class="card admin-card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="fas fa-landmark text-warning"></i>
+        <strong>About the Office</strong>
+        <span class="badge bg-soft-warning text-warning ms-auto" style="font-size:0.7rem;">About PIO Page</span>
+      </div>
+      <div class="card-body p-4">
+        <form action="/admin/settings/about-office" method="POST" enctype="multipart/form-data">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Office Photo</label>
+              <div class="mb-3">
+                <img src="<%= settings.aboutOfficePhoto %>" alt="About Office" class="img-fluid rounded" style="max-height:250px;object-fit:cover;width:100%;border:1px solid var(--border-color);"
+                     data-hide-on-error>
+              </div>
+              <input type="file" name="aboutOfficePhoto" class="form-control" accept="image/*">
+              <small class="text-muted">Leave empty to keep current image.</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">About the Office Description</label>
+              <textarea name="aboutOfficeDescription" class="form-control" rows="10" placeholder="Enter description about the Public Information Office..."><%= settings.aboutOfficeDescription %></textarea>
+              <small class="text-muted">This text appears in the "About the Office" section on the About PIO page.</small>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-warning text-dark"><i class="fas fa-save me-1"></i> Save About Office</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PIO TEAM ========== -->
+  <div class="tab-pane fade" id="teamPane" role="tabpanel">
+    <div class="card admin-card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="fas fa-users text-info"></i>
+        <strong>PIO Team Members</strong>
+        <span class="badge bg-soft-info text-info ms-auto" style="font-size:0.7rem;">About PIO Page</span>
+      </div>
+      <div class="card-body p-4">
+        <form action="/admin/settings/pio-team" method="POST" enctype="multipart/form-data">
+          <div id="teamContainer">
+            <% if (settings.pioTeam && settings.pioTeam.length > 0) { %>
+              <% settings.pioTeam.forEach((member, idx) => { %>
+                <div class="team-member-row card mb-3 p-3" style="background:rgba(255,255,255,0.03);border:1px solid var(--border-color);border-radius:var(--radius-md);">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong class="small" style="color:var(--text-muted);"><i class="fas fa-user-circle me-1"></i> Team Member #<span class="member-number"><%= idx + 1 %></span></strong>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-member-btn"><i class="fas fa-times"></i></button>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-md-3 text-center">
+                      <% if (member.photo) { %>
+                        <img src="<%= member.photo %>" class="rounded-circle mb-2" style="width:80px;height:80px;object-fit:cover;border:2px solid var(--border-color);"
+                             data-hide-on-error>
+                      <% } %>
+                      <input type="file" name="teamPhoto_<%= idx %>" class="form-control form-control-sm" accept="image/*">
+                      <input type="hidden" name="existingPhotos" value="<%= member.photo || '' %>">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label small">Name *</label>
+                      <input type="text" name="names" class="form-control form-control-sm" value="<%= member.name %>" required>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label small">Position</label>
+                      <input type="text" name="positions" class="form-control form-control-sm" value="<%= member.position %>">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label small">Description</label>
+                      <input type="text" name="descriptions" class="form-control form-control-sm" value="<%= member.description %>">
+                      <label class="form-label small mt-2">Accent Color</label>
+                      <input type="color" name="colors" class="form-control form-control-sm form-control-color" value="<%= member.color || '#3282b8' %>" style="height:32px;">
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+          <button type="button" class="btn btn-outline-info btn-sm mb-3" id="addTeamMember">
+            <i class="fas fa-plus me-1"></i> Add Team Member
+          </button>
+          <div>
+            <button type="submit" class="btn btn-info"><i class="fas fa-save me-1"></i> Save PIO Team</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PARTNER AGENCIES ========== -->
+  <div class="tab-pane fade" id="partnersPane" role="tabpanel">
+    <div class="card admin-card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="fas fa-handshake text-success"></i>
+        <strong>Partner Agencies</strong>
+        <span class="badge bg-soft-success text-success ms-auto" style="font-size:0.7rem;">About PIO Page</span>
+      </div>
+      <div class="card-body p-4">
+        <form action="/admin/settings/partner-agencies" method="POST" enctype="multipart/form-data">
+          <div id="agencyContainer">
+            <% if (settings.partnerAgencies && settings.partnerAgencies.length > 0) { %>
+              <% settings.partnerAgencies.forEach((agency, idx) => { %>
+                <div class="agency-row card mb-3 p-3" style="background:rgba(255,255,255,0.03);border:1px solid var(--border-color);border-radius:var(--radius-md);">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong class="small" style="color:var(--text-muted);"><i class="fas fa-building me-1"></i> Agency #<span class="agency-number"><%= idx + 1 %></span></strong>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-agency-btn"><i class="fas fa-times"></i></button>
+                  </div>
+                  <div class="row g-3 align-items-center">
+                    <div class="col-md-2 text-center">
+                      <% if (agency.logo) { %>
+                        <img src="<%= agency.logo %>" class="mb-2" style="width:60px;height:60px;object-fit:contain;"
+                             data-hide-on-error>
+                      <% } %>
+                      <input type="file" name="agencyLogo_<%= idx %>" class="form-control form-control-sm" accept="image/*">
+                      <input type="hidden" name="existingLogos" value="<%= agency.logo || '' %>">
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label small">Agency Name *</label>
+                      <input type="text" name="agencyNames" class="form-control form-control-sm" value="<%= agency.name %>" required>
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label small">Facebook URL</label>
+                      <input type="url" name="facebookUrls" class="form-control form-control-sm" value="<%= agency.facebookUrl %>" placeholder="https://facebook.com/...">
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+          <button type="button" class="btn btn-outline-success btn-sm mb-3" id="addAgency">
+            <i class="fas fa-plus me-1"></i> Add Agency
+          </button>
+          <div>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i> Save Partner Agencies</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for dynamic rows -->
+<script nonce="<%= cspNonce %>">
+document.addEventListener('DOMContentLoaded', function () {
+  // ---- PIO Team: Add Member ----
+  let teamIdx = document.querySelectorAll('.team-member-row').length;
+  document.getElementById('addTeamMember').addEventListener('click', function () {
+    const html = `
+      <div class="team-member-row card mb-3 p-3" style="background:rgba(255,255,255,0.03);border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <strong class="small" style="color:var(--text-muted);"><i class="fas fa-user-circle me-1"></i> New Team Member</strong>
+          <button type="button" class="btn btn-sm btn-outline-danger remove-member-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-3 text-center">
+            <input type="file" name="teamPhoto_${teamIdx}" class="form-control form-control-sm" accept="image/*">
+            <input type="hidden" name="existingPhotos" value="">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Name *</label>
+            <input type="text" name="names" class="form-control form-control-sm" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Position</label>
+            <input type="text" name="positions" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Description</label>
+            <input type="text" name="descriptions" class="form-control form-control-sm">
+            <label class="form-label small mt-2">Accent Color</label>
+            <input type="color" name="colors" class="form-control form-control-sm form-control-color" value="#3282b8" style="height:32px;">
+          </div>
+        </div>
+      </div>`;
+    document.getElementById('teamContainer').insertAdjacentHTML('beforeend', html);
+    teamIdx++;
+  });
+
+  // ---- Partner Agency: Add ----
+  let agencyIdx = document.querySelectorAll('.agency-row').length;
+  document.getElementById('addAgency').addEventListener('click', function () {
+    const html = `
+      <div class="agency-row card mb-3 p-3" style="background:rgba(255,255,255,0.03);border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <strong class="small" style="color:var(--text-muted);"><i class="fas fa-building me-1"></i> New Agency</strong>
+          <button type="button" class="btn btn-sm btn-outline-danger remove-agency-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="row g-3 align-items-center">
+          <div class="col-md-2 text-center">
+            <input type="file" name="agencyLogo_${agencyIdx}" class="form-control form-control-sm" accept="image/*">
+            <input type="hidden" name="existingLogos" value="">
+          </div>
+          <div class="col-md-5">
+            <label class="form-label small">Agency Name *</label>
+            <input type="text" name="agencyNames" class="form-control form-control-sm" required>
+          </div>
+          <div class="col-md-5">
+            <label class="form-label small">Facebook URL</label>
+            <input type="url" name="facebookUrls" class="form-control form-control-sm" placeholder="https://facebook.com/...">
+          </div>
+        </div>
+      </div>`;
+    document.getElementById('agencyContainer').insertAdjacentHTML('beforeend', html);
+    agencyIdx++;
+  });
+
+  // ---- Remove handlers (delegated) ----
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.remove-member-btn')) {
+      e.target.closest('.team-member-row').remove();
+    }
+    if (e.target.closest('.remove-agency-btn')) {
+      e.target.closest('.agency-row').remove();
+    }
+  });
+});
+</script>

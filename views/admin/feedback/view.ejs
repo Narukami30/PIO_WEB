@@ -1,0 +1,68 @@
+﻿<!-- Page Header -->
+<div class="admin-page-header d-flex justify-content-between align-items-center">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/feedback">Feedback</a></li>
+        <li class="breadcrumb-item active">Details</li>
+      </ol>
+    </nav>
+    <h1><i class="fas fa-comments"></i>Feedback Details</h1>
+  </div>
+  <a href="/admin/feedback" class="btn btn-outline-secondary" style="border-radius:10px;padding:0.5rem 1.25rem;"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card admin-card">
+      <div class="card-header d-flex justify-content-between align-items-center" style="padding:1rem 1.25rem;">
+        <h5 class="mb-0" style="font-size:1rem;"><%= feedback.subject %></h5>
+        <span class="badge bg-<%= feedback.status === 'new' ? 'danger' : feedback.status === 'read' ? 'warning' : feedback.status === 'responded' ? 'success' : 'secondary' %>" style="border-radius:6px;"><%= feedback.status %></span>
+      </div>
+      <div class="card-body p-4">
+        <div class="p-3 rounded mb-4" style="background:var(--admin-hover);border:1px solid rgba(255,255,255,0.06);">
+          <p class="mb-0"><%= feedback.message %></p>
+        </div>
+
+        <% if (feedback.adminResponse) { %>
+          <h6 class="text-success" style="font-size:0.85rem;font-weight:700;"><i class="fas fa-reply me-1"></i>Admin Response</h6>
+            <p class="mb-1"><%= feedback.adminResponse %></p>
+            <small class="text-muted">
+              <% if (feedback.respondedBy) { %>By: <%= feedback.respondedBy.firstName %> <%= feedback.respondedBy.lastName %> &middot; <% } %>
+              <%= feedback.respondedAt ? formatDate(feedback.respondedAt, 'short') : '' %>
+            </small>
+          </div>
+        <% } %>
+
+        <% if (feedback.status !== 'responded') { %>
+          <h6 style="font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-reply me-2" style="color:var(--naujan-secondary);"></i>Respond</h6>
+          <form action="/admin/feedback/<%= feedback._id %>/respond" method="POST">
+            <textarea name="adminResponse" class="form-control mb-3" rows="4" required placeholder="Type your response..."><%= feedback.adminResponse || '' %></textarea>
+            <button type="submit" class="btn btn-success" style="border-radius:10px;padding:0.5rem 1.5rem;"><i class="fas fa-paper-plane me-1"></i>Send Response</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card admin-card">
+      <div class="card-header" style="padding:0.85rem 1.25rem;"><h6 class="mb-0" style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-user me-2" style="color:var(--naujan-secondary);"></i>Citizen Info</h6></div>
+      <div class="card-body">
+        <p><strong>Name:</strong> <%= feedback.citizenName %></p>
+        <p><strong>Email:</strong> <%= feedback.email || 'â€”' %></p>
+        <p><strong>Phone:</strong> <%= feedback.phone || 'â€”' %></p>
+        <p><strong>Category:</strong> <span class="badge bg-secondary"><%= feedback.category %></span></p>
+        <p><strong>Submitted:</strong> <%= formatDate(feedback.createdAt, 'short') %></p>
+      </div>
+      <div class="card-footer">
+        <% if (feedback.status !== 'archived') { %>
+          <form action="/admin/feedback/<%= feedback._id %>/archive" method="POST">
+            <button class="btn btn-sm btn-outline-secondary w-100"><i class="fas fa-archive me-1"></i>Archive</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

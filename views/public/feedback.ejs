@@ -1,0 +1,71 @@
+<section class="page-header text-white">
+  <div class="container">
+    <h1><i class="fas fa-comment-dots me-2"></i>Submit Feedback</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active text-white">Feedback</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 fade-up">
+        <div class="text-center mb-4">
+          <span class="badge bg-soft-primary text-primary rounded-pill px-3 py-2 mb-2">We Value Your Input</span>
+          <h3 class="fw-bold">Help Us Improve</h3>
+          <p class="text-muted">Your feedback helps us serve you better</p>
+        </div>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4 p-md-5">
+            <form action="/feedback" method="POST">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Full Name *</label>
+                  <input type="text" class="form-control rounded-3" name="citizenName" placeholder="Juan Dela Cruz" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email</label>
+                  <input type="email" class="form-control rounded-3" name="email" placeholder="juan@email.com">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Phone</label>
+                  <input type="text" class="form-control rounded-3" name="phone" placeholder="09XX XXX XXXX">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Category *</label>
+                  <select class="form-select rounded-3" name="category" required>
+                    <option value="suggestion">Suggestion</option>
+                    <option value="compliment">Compliment</option>
+                    <option value="inquiry">Inquiry</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Subject *</label>
+                <input type="text" class="form-control rounded-3" name="subject" placeholder="What is this about?" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Message *</label>
+                <textarea class="form-control rounded-3" name="message" rows="5" placeholder="Tell us your thoughts..." required></textarea>
+              </div>
+              <div class="alert alert-light border rounded-3 small">
+                <i class="fas fa-shield-alt me-1 text-primary"></i>
+                Your information is protected under the Data Privacy Act of 2012.
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill">
+                <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

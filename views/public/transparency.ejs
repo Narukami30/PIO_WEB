@@ -1,0 +1,78 @@
+<%- include('../partials/notificationBanner') %>
+<section class="page-header text-white">
+  <div class="container">
+    <h1><i class="fas fa-eye me-2"></i>Transparency Seal</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active text-white">Transparency</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <!-- Filters -->
+    <div class="row g-3 mb-4 fade-up">
+      <div class="col-12 col-md-8">
+        <div class="d-flex flex-wrap gap-2 category-filter-pills" role="group">
+          <a href="/transparency" class="btn btn-sm rounded-pill <%= !query.type ? 'btn-primary' : 'btn-outline-primary' %>">All</a>
+          <a href="/transparency?type=transparency_seal" class="btn btn-sm rounded-pill <%= query.type === 'transparency_seal' ? 'btn-primary' : 'btn-outline-primary' %>">Transparency Seal</a>
+          <a href="/transparency?type=full_disclosure" class="btn btn-sm rounded-pill <%= query.type === 'full_disclosure' ? 'btn-primary' : 'btn-outline-primary' %>">Full Disclosure</a>
+          <a href="/transparency?type=annual_budget" class="btn btn-sm rounded-pill <%= query.type === 'annual_budget' ? 'btn-primary' : 'btn-outline-primary' %>">Annual Budget</a>
+          <a href="/transparency?type=annual_procurement" class="btn btn-sm rounded-pill <%= query.type === 'annual_procurement' ? 'btn-primary' : 'btn-outline-primary' %>">Procurement</a>
+          <a href="/transparency?type=bid_results" class="btn btn-sm rounded-pill <%= query.type === 'bid_results' ? 'btn-primary' : 'btn-outline-primary' %>">Bid Results</a>
+          <a href="/transparency?type=financial_report" class="btn btn-sm rounded-pill <%= query.type === 'financial_report' ? 'btn-primary' : 'btn-outline-primary' %>">Financial</a>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <% if (years && years.length > 0) { %>
+        <select class="form-select form-select-sm rounded-pill" data-nav-pattern="/transparency?year={value}<%= query.type ? '&type=' + encodeURIComponent(query.type) : '' %>">
+          <option value="">All Years</option>
+          <% years.forEach(y => { %>
+            <option value="<%= y %>" <%= query.year == y ? 'selected' : '' %>><%= y %></option>
+          <% }) %>
+        </select>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <% if (reports.length > 0) { %>
+        <% reports.forEach(report => { %>
+          <div class="col-sm-6 col-md-4 fade-up">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <span class="badge bg-soft-primary text-primary rounded-pill"><%= report.reportType.replace(/_/g, ' ') %></span>
+                  <span class="badge bg-soft-secondary text-secondary rounded-pill">FY <%= report.fiscalYear %></span>
+                </div>
+                <h6 class="card-title fw-bold"><%= report.title %></h6>
+                <% if (report.description) { %>
+                  <p class="card-text text-muted small"><%= truncate(report.description, 100) %></p>
+                <% } %>
+                <% if (report.quarter) { %>
+                  <span class="badge bg-soft-info text-info rounded-pill"><%= report.quarter %></span>
+                <% } %>
+              </div>
+              <div class="card-footer bg-transparent border-top px-3 pb-3">
+                <a href="<%= report.filePath %>" class="btn btn-sm btn-primary rounded-pill w-100" target="_blank">
+                  <i class="fas fa-download me-1"></i> Download
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-12 text-center py-5 text-muted fade-up">
+          <div class="icon-wrapper mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;">
+            <i class="fas fa-eye"></i>
+          </div>
+          <h5>No reports found</h5>
+          <p class="text-muted">Try changing the filters above.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>

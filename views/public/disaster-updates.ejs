@@ -1,0 +1,156 @@
+﻿<%- include('../partials/notificationBanner') %>
+<section class="page-header text-white">
+  <div class="container">
+    <h1><i class="fas fa-exclamation-triangle me-2"></i>Disaster & DRRM Updates</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active text-white">DRRM Updates</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <% if (updates.length === 0) { %>
+      <div class="text-center py-5 fade-up">
+        <div class="icon-wrapper mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;background:#d4edda;color:#198754;">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h4 class="fw-bold">No Active Alerts</h4>
+        <p class="text-muted">There are currently no disaster alerts or advisories.</p>
+      </div>
+    <% } else { %>
+      <% updates.forEach(update => { %>
+        <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden border-start border-5 border-<%= alertLevelClass(update.alertLevel) %> fade-up">
+          <div class="card-body p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-start mb-2">
+              <h5 class="card-title mb-1 fw-bold">
+                <% if (update.alertLevel === 'critical') { %>
+                  <i class="fas fa-radiation text-danger me-2"></i>
+                <% } else if (update.alertLevel === 'warning') { %>
+                  <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                <% } else if (update.alertLevel === 'advisory') { %>
+                  <i class="fas fa-info-circle text-primary me-2"></i>
+                <% } else { %>
+                  <i class="fas fa-bullhorn text-info me-2"></i>
+                <% } %>
+                <%= update.title %>
+              </h5>
+              <div>
+                <span class="badge bg-<%= alertLevelClass(update.alertLevel) %> rounded-pill me-1"><%= update.alertLevel.toUpperCase() %></span>
+                <span class="badge bg-soft-secondary text-secondary rounded-pill"><%= update.type.replace(/_/g, ' ') %></span>
+              </div>
+            </div>
+
+            <p class="mb-3"><%= update.content %></p>
+
+            <% if (update.affectedBarangays && update.affectedBarangays.length > 0) { %>
+              <p class="mb-2">
+                <strong><i class="fas fa-map-marker-alt me-1 text-danger"></i>Affected Barangays:</strong>
+                <% update.affectedBarangays.forEach(b => { %>
+                  <span class="badge bg-soft-primary text-primary rounded-pill me-1"><%= b %></span>
+                <% }) %>
+              </p>
+            <% } %>
+
+            <% if (update.attachments && update.attachments.length > 0) { %>
+              <div class="mt-2">
+                <% update.attachments.forEach(att => { %>
+                  <a href="<%= att %>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill me-1">
+                    <i class="fas fa-paperclip me-1"></i>Attachment
+                  </a>
+                <% }) %>
+              </div>
+            <% } %>
+
+            <div class="text-muted small mt-3 pt-3 border-top">
+              <i class="fas fa-clock me-1"></i>Posted: <%= formatDate(update.createdAt, 'short') %>
+              <% if (update.updatedAt && update.updatedAt.toString() !== update.createdAt.toString()) { %>
+                &middot; Updated: <%= formatDate(update.updatedAt, 'short') %>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+
+    <!-- Emergency Hotlines -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-5 fade-up">
+      <div class="card-body p-4">
+        <h5 class="fw-bold mb-3"><i class="fas fa-phone-alt me-2 text-danger"></i>Emergency Hotlines</h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <span class="icon-wrapper me-2" style="width:36px;height:36px;font-size:0.8rem;background:rgba(21,101,192,0.18);color:#42a5f5;flex-shrink:0;">
+                <i class="fas fa-user-shield"></i>
+              </span>
+              <div>
+                <small class="text-muted d-block">Police Station (PNP)</small>
+                <strong class="d-block">0917 743 0311</strong>
+                <strong class="d-block">0998 598 5821</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <span class="icon-wrapper me-2" style="width:36px;height:36px;font-size:0.8rem;background:rgba(230,81,0,0.18);color:#ff9800;flex-shrink:0;">
+                <i class="fas fa-fire-extinguisher"></i>
+              </span>
+              <div>
+                <small class="text-muted d-block">Fire Station (BFP)</small>
+                <strong class="d-block">0956 660 0630</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <span class="icon-wrapper me-2" style="width:36px;height:36px;font-size:0.8rem;background:rgba(198,40,40,0.18);color:#ef5350;flex-shrink:0;">
+                <i class="fas fa-shield-alt"></i>
+              </span>
+              <div>
+                <small class="text-muted d-block">MDRRMO / Rescue</small>
+                <strong class="d-block">0975 229 0120</strong>
+                <strong class="d-block">0960 542 2200</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <span class="icon-wrapper me-2" style="width:36px;height:36px;font-size:0.8rem;background:rgba(46,125,50,0.18);color:#66bb6a;flex-shrink:0;">
+                <i class="fas fa-hospital"></i>
+              </span>
+              <div>
+                <small class="text-muted d-block">Community Hospital</small>
+                <strong class="d-block">0936 308 5380</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <span class="icon-wrapper me-2" style="width:36px;height:36px;font-size:0.8rem;background:rgba(0,105,92,0.18);color:#26a69a;flex-shrink:0;">
+                <i class="fas fa-heartbeat"></i>
+              </span>
+              <div>
+                <small class="text-muted d-block">Health Center</small>
+                <strong class="d-block">0985 402 5204</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <span class="icon-wrapper me-2" style="width:36px;height:36px;font-size:0.8rem;background:rgba(245,127,23,0.18);color:#fdd835;flex-shrink:0;">
+                <i class="fas fa-bolt"></i>
+              </span>
+              <div>
+                <small class="text-muted d-block">Ormeco Naujan</small>
+                <strong class="d-block">0912 283 3435</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

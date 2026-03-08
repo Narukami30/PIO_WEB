@@ -1,0 +1,72 @@
+﻿<!-- Page Header -->
+<div class="admin-page-header">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1">
+      <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="/admin/users">Users</a></li>
+      <li class="breadcrumb-item active"><%= isEdit ? 'Edit' : 'Create' %></li>
+    </ol>
+  </nav>
+  <h1><i class="fas fa-users-cog"></i><%= isEdit ? 'Edit' : 'New' %> User</h1>
+</div>
+
+<div class="card admin-card">
+  <div class="card-body p-4">
+    <form action="<%= isEdit ? '/admin/users/' + editUser._id + '?_method=PUT' : '/admin/users' %>" method="POST">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">First Name *</label>
+          <input type="text" name="firstName" class="form-control" required value="<%= isEdit ? editUser.firstName : '' %>">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Last Name *</label>
+          <input type="text" name="lastName" class="form-control" required value="<%= isEdit ? editUser.lastName : '' %>">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email *</label>
+          <input type="email" name="email" class="form-control" required value="<%= isEdit ? editUser.email : '' %>">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Phone</label>
+          <input type="text" name="phone" class="form-control" value="<%= isEdit ? (editUser.phone || '') : '' %>">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Password <%= isEdit ? '(leave blank to keep)' : '*' %></label>
+          <input type="password" name="password" class="form-control" <%= !isEdit ? 'required' : '' %> minlength="8">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Role *</label>
+          <select name="role" class="form-select" required>
+            <option value="">Select Role</option>
+            <% if (typeof roles !== 'undefined') { %>
+              <% roles.forEach(r => { %>
+                <option value="<%= r._id %>" <%= (isEdit && editUser.role && editUser.role.toString() === r._id.toString()) ? 'selected' : '' %>><%= r.displayName || r.name.replace(/_/g,' ') %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Department</label>
+          <select name="department" class="form-select">
+            <option value="">None</option>
+            <% if (typeof departments !== 'undefined') { %>
+              <% departments.forEach(d => { %>
+                <option value="<%= d._id %>" <%= (isEdit && editUser.department && editUser.department.toString() === d._id.toString()) ? 'selected' : '' %>><%= d.name %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+          <div class="form-check">
+            <input type="checkbox" name="isActive" class="form-check-input" id="isActive" <%= (!isEdit || editUser.isActive) ? 'checked' : '' %>>
+            <label class="form-check-label" for="isActive">Active</label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3" style="border-top:1px solid rgba(255,255,255,0.08);">
+        <button type="submit" class="btn btn-primary" style="border-radius:10px;padding:0.5rem 1.5rem;"><i class="fas fa-save me-1"></i>Save User</button>
+        <a href="/admin/users" class="btn btn-outline-secondary ms-2" style="border-radius:10px;padding:0.5rem 1.5rem;"><i class="fas fa-times me-1"></i>Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>

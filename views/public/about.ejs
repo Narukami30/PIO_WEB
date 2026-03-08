@@ -1,0 +1,515 @@
+﻿<!-- Page Header -->
+<section class="page-header text-white">
+  <div class="container">
+    <h1><i class="fas fa-landmark me-2"></i>About the PIO</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active text-white">About PIO</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<!-- About the Office -->
+<section class="py-5">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 slide-left">
+        <div class="img-hover-zoom" style="border-radius:var(--radius-xl);">
+          <img src="<%= (siteSettings && siteSettings.aboutOfficePhoto) || '/uploads/images/heropic.jpg' %>"
+               data-fallback-src="/uploads/images/pio-logo.png"
+               alt="Municipal Hall of Naujan"
+               style="width:100%;height:420px;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);">
+        </div>
+      </div>
+      <div class="col-lg-6 slide-right">
+        <span class="badge bg-soft-primary text-primary px-3 py-2 mb-3" style="border-radius:50px;font-size:0.75rem;letter-spacing:0.5px;">PUBLIC INFORMATION OFFICE</span>
+        <h2 class="section-title mb-2">About the Office</h2>
+        <div class="section-divider mb-3"></div>
+        <% if (siteSettings && siteSettings.aboutOfficeDescription) { %>
+          <p style="color:var(--text-secondary);line-height:1.85;font-size:0.97rem;white-space:pre-line;"><%= siteSettings.aboutOfficeDescription %></p>
+        <% } else { %>
+        <p style="color:var(--text-secondary);line-height:1.85;font-size:0.97rem;">
+          The <strong>Public Information Office (PIO)</strong> of the Municipality of Naujan, Oriental Mindoro serves as 
+          the official communication arm of the local government unit. We are responsible for keeping citizens informed 
+          about government programs, projects, activities, and policies that affect their daily lives.
+        </p>
+        <p style="color:var(--text-secondary);line-height:1.85;font-size:0.97rem;">
+          As mandated under the <strong>Local Government Code of 1991 (RA 7160)</strong>, the PIO ensures that 
+          information is accessible, accurate, and timely — promoting transparency, accountability, and civic 
+          engagement in every barangay of Naujan.
+        </p>
+        <% } %>
+        <div class="d-flex gap-3 flex-wrap mt-4">
+          <a href="/contact" class="btn btn-primary btn-ripple"><i class="fas fa-envelope me-2"></i>Contact PIO</a>
+          <a href="/officials" class="btn btn-outline-primary btn-ripple"><i class="fas fa-users me-2"></i>Our Officials</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission, Vision, Mandate -->
+<section class="py-5" style="background:var(--naujan-light);">
+  <div class="container">
+    <div class="text-center mb-5 fade-up">
+      <span class="badge bg-soft-primary text-primary px-3 py-2 mb-2" style="border-radius:50px;">Our Foundation</span>
+      <h2 class="section-title">Mission, Vision & Mandate</h2>
+      <div class="section-divider section-divider-center"></div>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-4 fade-up delay-1">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius:var(--radius-lg);overflow:hidden;">
+          <div style="height:6px;background:linear-gradient(90deg,var(--naujan-primary),var(--naujan-secondary));"></div>
+          <div class="card-body p-4">
+            <div style="width:56px;height:56px;border-radius:14px;background:rgba(21,101,192,0.18);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+              <i class="fas fa-bullseye fa-lg text-primary"></i>
+            </div>
+            <h4 class="fw-bold mb-3" style="font-size:1.15rem;">Mission</h4>
+            <ul style="color:var(--text-secondary);line-height:1.85;font-size:0.92rem;padding-left:1.1rem;margin-bottom:0;">
+              <li>Conservation and protection of natural resources for safer, adaptive and disaster resilient barangays.</li>
+              <li>Recognition and promotion of indigenous cultural communities to develop more opportunities while assuring respect to their cultural integrity.</li>
+              <li>Promotion of eco-tourism and sustainable agricultural production for self sufficient economy.</li>
+              <li>Availability and accessibility of adequate social services through improved public infrastructures and facilities, transforming the people into empowered and self-reliant citizen.</li>
+              <li>Accountability and competency of people-centered government, creating more partnerships and uplifting morale of its citizens through various programs, projects and activities toward sustainable development.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 fade-up delay-2">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius:var(--radius-lg);overflow:hidden;">
+          <div style="height:6px;background:linear-gradient(90deg,var(--naujan-gold),#ffd700);"></div>
+          <div class="card-body p-4">
+            <div style="width:56px;height:56px;border-radius:14px;background:rgba(240,165,0,0.18);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+              <i class="fas fa-eye fa-lg text-warning"></i>
+            </div>
+            <h4 class="fw-bold mb-3" style="font-size:1.15rem;">Vision</h4>
+            <p class="mb-1" style="color:var(--text-secondary);line-height:1.85;font-size:0.85rem;font-style:italic;">The Development Vision of Naujan states:</p>
+            <p style="color:var(--text-secondary);line-height:1.85;font-size:0.92rem;margin-bottom:0;">
+              By 2030, Naujan envisions to be the leading agricultural municipality in MIMAROPA, with a livable and ecologically balance environment demonstrating a vibrant economy inspired by God-loving, healthy, educated and empowered citizenry under a dynamic and committed leadership.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 fade-up delay-3">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius:var(--radius-lg);overflow:hidden;">
+          <div style="height:6px;background:linear-gradient(90deg,#198754,#20c997);"></div>
+          <div class="card-body p-4">
+            <div style="width:56px;height:56px;border-radius:14px;background:rgba(25,135,84,0.18);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+              <i class="fas fa-file-contract fa-lg text-success"></i>
+            </div>
+            <h4 class="fw-bold mb-3" style="font-size:1.15rem;">Mandate</h4>
+            <p style="color:var(--text-secondary);line-height:1.85;font-size:0.92rem;margin-bottom:0;">
+              The Local Government of Naujan is created prior to the enactment of the Local Government Code of the Philippines. The operations of the Municipality, however, is in accordance to the Local Government Code and other applicable laws aimed at attaining the general welfare of the community and its inhabitants through effective and economical governance. Enforce the laws and ordinances pertinent to the effective governance of the municipality. Implementation of development plans, program objectives as provided for under <strong>Section 18 of RA 7160</strong> and the delivery of basic services and the provisions of adequate local facilities as provided for under <strong>Section 17 of RA 7160</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service Pledge -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5 fade-up">
+      <span class="badge bg-soft-warning text-warning px-3 py-2 mb-2" style="border-radius:50px;">Our Commitment</span>
+      <h2 class="section-title">Service Pledge</h2>
+      <div class="section-divider section-divider-center"></div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-9 fade-up">
+        <div class="card border-0 shadow-sm" style="border-radius:var(--radius-lg);overflow:hidden;">
+          <div style="height:6px;background:linear-gradient(90deg,var(--naujan-gold),var(--naujan-primary));"></div>
+          <div class="card-body p-5">
+            <div class="d-flex align-items-start gap-4">
+              <div style="width:64px;height:64px;border-radius:16px;background:rgba(240,165,0,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fas fa-hand-holding-heart fa-xl text-warning"></i>
+              </div>
+              <div>
+                <h5 class="fw-bold mb-3" style="font-size:1.05rem;">We, the officials and employees of the Municipal Government of Naujan, Oriental Mindoro pledge and commit to ensure the efficient delivery of quality public services as provided in this Citizens Charter.</h5>
+                <ul style="color:var(--text-secondary);line-height:1.9;font-size:0.92rem;padding-left:1.1rem;margin-bottom:0;">
+                  <li>Serve with integrity and sincerity</li>
+                  <li>Be polite and courteous</li>
+                  <li>Demonstrate appropriate behavior and professionalism</li>
+                  <li>Attend immediately to the need of customers</li>
+                  <li>Provide adequate and accurate information</li>
+                  <li>Be prompt and timely</li>
+                  <li>Be available during office hours</li>
+                  <li>Be ready to respond to complaints</li>
+                  <li>Be customer-friendly and treat everyone equally</li>
+                  <li>Do our best to correct our weakness for the improvement of the service</li>
+                  <li>Attend to all applicants or requesting parties who are within the premises of the office prior to the end of official working hours and during lunch break</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Functions -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5 fade-up">
+      <span class="badge bg-soft-success text-success px-3 py-2 mb-2" style="border-radius:50px;">What We Do</span>
+      <h2 class="section-title">Core Functions</h2>
+      <div class="section-divider section-divider-center"></div>
+    </div>
+    <div class="row g-4">
+      <% const functions = [
+        { icon:'fas fa-newspaper', color:'primary', title:'News & Announcements', desc:'Publishing official news, press releases, and municipal announcements to keep the public informed of government activities and decisions.' },
+        { icon:'fas fa-calendar-check', color:'success', title:'Events Management', desc:'Coordinating and promoting municipal events, programs, and activities that strengthen community ties and citizen participation.' },
+        { icon:'fas fa-eye', color:'warning', title:'Transparency Reporting', desc:'Preparing and publishing Transparency Seal documents, financial reports, and accountability records as required by law.' },
+        { icon:'fas fa-photo-video', color:'info', title:'Documentation & Media', desc:'Documenting official government activities through photo and video coverage for historical and public information purposes.' },
+        { icon:'fas fa-comments', color:'danger', title:'Citizen Engagement', desc:'Managing feedback mechanisms, public consultations, and complaint desks to ensure citizen voices are heard.' },
+        { icon:'fas fa-shield-alt', color:'primary', title:'DRRM Communication', desc:'Disseminating real-time disaster alerts, advisories, and emergency information to protect citizen safety.' }
+      ]; %>
+      <% functions.forEach((fn, i) => { %>
+        <div class="col-lg-4 col-md-6 fade-up delay-<%= i+1 %>">
+          <div class="d-flex gap-3 p-4 card border-0 shadow-sm h-100" style="border-radius:var(--radius-lg);transition:var(--transition);"
+               data-hover-lift>
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(var(--bs-<%= fn.color %>-rgb,15,76,117),0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;" class="bg-soft-<%= fn.color %>">
+              <i class="<%= fn.icon %> text-<%= fn.color %>"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-1" style="font-size:0.95rem;"><%= fn.title %></h6>
+              <p class="mb-0 small" style="color:var(--text-secondary);line-height:1.7;"><%= fn.desc %></p>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- PIO Team -->
+<section class="py-5" style="background:linear-gradient(180deg,rgba(255,255,255,0.02) 0%,rgba(255,255,255,0.05) 100%);">
+  <div class="container">
+    <div class="text-center mb-5 fade-up">
+      <span class="badge bg-soft-primary text-primary px-3 py-2 mb-2" style="border-radius:50px;">The People Behind the Office</span>
+      <h2 class="section-title" style="color:#fff;">PIO Team</h2>
+      <div class="section-divider section-divider-center"></div>
+      <p class="section-subtitle">Dedicated public servants committed to transparent governance</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <% const teamMembers = (siteSettings && siteSettings.pioTeam && siteSettings.pioTeam.length > 0) ? siteSettings.pioTeam : [
+        { name: 'Hon. PIO Officer', position: 'Public Information Officer', description: 'Oversees all information dissemination and communication activities of the LGU.', photo: '/uploads/images/img-9ca02f99-ff39-48d3-9193-4f3697df2616.jpg', color: '#f0a500' },
+        { name: 'Communications Staff', position: 'Information Officer I', description: 'Handles news writing, press releases, and media liaising for official municipal communications.', photo: '/uploads/images/img-b53fafe9-7eb7-42b5-8637-6e268caecb9b.jpg', color: '#3282b8' },
+        { name: 'Documentation Staff', position: 'Information Officer II', description: 'Manages photo/video documentation, social media accounts, and digital content production.', photo: '/uploads/images/img-e8e2883a-a569-4cbd-a86e-c876c1564941.jpg', color: '#dc3545' }
+      ]; %>
+      <% teamMembers.forEach((member, i) => { %>
+        <div class="col-lg-3 col-md-5 col-8 fade-up delay-<%= i + 1 %>">
+          <div class="card border-0 shadow-sm text-center h-100" style="border-radius:var(--radius-lg);overflow:hidden;">
+            <div style="height:5px;background:linear-gradient(90deg,<%= member.color || '#3282b8' %>,<%= member.color ? member.color + '99' : '#20c997' %>);"></div>
+            <div class="card-body p-4">
+              <div class="d-inline-block mb-3 position-relative">
+                <% if (member.photo) { %>
+                  <img src="<%= member.photo %>"
+                       data-hide-on-error="sibling"
+                       alt="<%= member.name %>"
+                       class="rounded-circle shadow-sm"
+                       style="width:100px;height:100px;object-fit:cover;border:3px solid <%= member.color || '#3282b8' %>;">
+                <% } %>
+                <div class="avatar-initials avatar-xl rounded-circle shadow-sm"
+                     style="<%= member.photo ? 'display:none;' : 'display:flex;' %>width:100px;height:100px;font-size:2rem;border:3px solid <%= member.color || '#3282b8' %>;">
+                  <i class="fas fa-user"></i>
+                </div>
+                <% if (i === 0) { %>
+                  <span class="position-absolute bottom-0 end-0 badge bg-warning text-dark rounded-pill" style="font-size:0.55rem;padding:0.3em 0.4em;">HEAD</span>
+                <% } %>
+              </div>
+              <h5 class="fw-bold mb-0" style="font-size:0.97rem;color:#fff;"><%= member.name %></h5>
+              <small class="fw-semibold d-block mb-2" style="font-size:0.78rem;color:<%= member.color || '#64b5f6' %>;"><%= member.position %></small>
+              <% if (member.description) { %>
+                <p class="small mb-0" style="color:rgba(255,255,255,0.6);font-size:0.78rem;line-height:1.6;"><%= member.description %></p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <p class="text-center small mt-4" style="color:var(--text-muted);">
+      <i class="fas fa-info-circle me-1"></i>
+      Full staff directory is managed through the <a href="/officials">Officials & Departments</a> section.
+    </p>
+  </div>
+</section>
+
+<!-- Partner Agencies -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5 fade-up">
+      <span class="badge bg-soft-primary text-primary px-3 py-2 mb-2" style="border-radius:50px;">Government Network</span>
+      <h2 class="section-title">Partner Agencies</h2>
+      <div class="section-divider section-divider-center"></div>
+      <p class="section-subtitle">Working together for a safer, healthier, and better-served Naujan</p>
+    </div>
+    <div class="row g-4 justify-content-center align-items-center">
+      <% const agencies = (siteSettings && siteSettings.partnerAgencies && siteSettings.partnerAgencies.length > 0) ? siteSettings.partnerAgencies.map(a => ({ img: a.logo, name: a.name, fb: a.facebookUrl })) : [
+        { img:'/uploads/images/naujan-police-logo.jpg',  name:'Naujan Municipal Police Station', fb:'https://www.facebook.com/share/1AX9dKPzi6/' },
+        { img:'/uploads/images/bfp-naujan.jpg',          name:'Bureau of Fire Protection Naujan', fb:'https://web.facebook.com/naujanfirestation.pis' },
+        { img:'/uploads/images/mdrrmo-logo.jpg',         name:'MDRRMO Naujan', fb:'https://www.facebook.com/share/1CJX5tdNGz/' },
+        { img:'/uploads/images/mho-naujan-logo.jpg',     name:'Municipal Health Office', fb:'https://www.facebook.com/share/1AsBVtHNUk/' },
+        { img:'/uploads/images/naujan-hospital-logo.jpg',name:'Naujan Community Hospital', fb:'https://www.facebook.com/profile.php?id=61566218375226' },
+        { img:'/uploads/images/ormeco-logo.png',         name:'ORMECO', fb:'https://www.facebook.com/share/1JWVg6SZFf/' },
+      ]; %>
+      <% agencies.forEach((ag, i) => { %>
+        <div class="col-6 col-md-4 col-lg-2 text-center fade-up delay-<%= (i % 6) + 1 %>">
+          <div class="card border-0 shadow-sm h-100 card-hover" style="border-radius:var(--radius-lg);padding:1.25rem 0.75rem;transition:var(--transition);"
+               data-hover-lift>
+            <img src="<%= ag.img %>"
+                 data-hide-on-error="invisible"
+                 alt="<%= ag.name %>"
+                 style="width:72px;height:72px;object-fit:contain;margin:0 auto 0.75rem;display:block;">
+            <p class="mb-2" style="font-size:0.75rem;font-weight:600;color:var(--text-primary);line-height:1.4;"><%= ag.name %></p>
+            <% if (ag.fb) { %>
+              <a href="<%= ag.fb %>" target="_blank" rel="noopener"
+                 class="btn btn-sm btn-outline-primary" style="font-size:0.7rem;border-radius:50px;padding:0.2em 0.75em;">
+                <i class="fab fa-facebook-f me-1"></i>Follow
+              </a>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Location & Contact CTA -->
+<section class="py-5" style="background:linear-gradient(135deg,#0a1628 0%,#0f2a4a 55%,#0a1e38 100%);">
+  <div class="container">
+    <!-- Section heading -->
+    <div class="text-center mb-4 fade-up">
+      <span style="display:inline-flex;align-items:center;gap:0.45rem;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:50px;padding:0.3rem 0.9rem;font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.65);letter-spacing:0.1em;text-transform:uppercase;">
+        <i class="fas fa-map-marker-alt" style="color:#ea4335;font-size:0.65rem;"></i> Our Location
+      </span>
+      <h3 class="fw-bold mt-3 mb-1 text-white" style="font-size:1.6rem;">Find Us</h3>
+      <p style="color:rgba(255,255,255,0.48);font-size:0.88rem;max-width:380px;margin:0 auto;">Visit the PIO Office at the New Naujan Municipal Hall</p>
+    </div>
+
+    <div class="row g-4 align-items-stretch">
+
+      <!-- MAP CARD -->
+      <div class="col-lg-7 fade-up">
+        <div data-bs-toggle="modal" data-bs-target="#mapPhotoModal"
+             style="border-radius:18px;overflow:hidden;min-height:350px;position:relative;cursor:pointer;background:#101c2c;box-shadow:0 24px 64px rgba(0,0,0,0.55);transition:transform 0.35s cubic-bezier(.22,.68,0,1.2),box-shadow 0.35s ease;"
+             data-hover-zoom="#mapThumbImg">
+
+          <!-- Photo -->
+          <img id="mapThumbImg" src="/uploads/images/map-naujan.png"
+               alt="Satellite view â€” New Naujan Municipal Hall"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform 0.5s cubic-bezier(.22,.68,0,1.2);">
+
+          <!-- Bottom gradient -->
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,25,0.9) 0%,rgba(4,12,25,0.15) 45%,transparent 72%);pointer-events:none;"></div>
+          <!-- Side vignette -->
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,0.45) 100%);pointer-events:none;"></div>
+
+          <!-- Pulsing pin -->
+          <div style="position:absolute;top:44%;left:52%;transform:translate(-50%,-100%);">
+            <div style="position:relative;display:inline-block;">
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:rgba(234,67,53,0.22);animation:pinPulse 2s ease-out infinite;"></div>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:rgba(234,67,53,0.16);animation:pinPulse 2s ease-out infinite 0.6s;"></div>
+              <svg width="34" height="48" viewBox="0 0 36 52" style="filter:drop-shadow(0 5px 14px rgba(0,0,0,0.75));display:block;">
+                <path d="M18 0C8.06 0 0 8.06 0 18c0 13.5 18 34 18 34s18-20.5 18-34C36 8.06 27.94 0 18 0z" fill="#ea4335"/>
+                <path d="M18 2.5C9.5 2.5 2.5 9.5 2.5 18c0 12 15.5 30 15.5 30S33.5 30 33.5 18C33.5 9.5 26.5 2.5 18 2.5z" fill="#f55"/>
+                <circle cx="18" cy="18" r="7" fill="white"/>
+                <circle cx="18" cy="18" r="3.5" fill="#ea4335"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Bottom bar (frosted glass) -->
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:0.9rem 1.2rem;background:rgba(4,12,25,0.52);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-size:0.87rem;font-weight:700;color:#fff;line-height:1.3;">New Naujan Municipal Hall</div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.55);margin-top:2px;display:flex;align-items:center;gap:0.35rem;">
+                <i class="fas fa-map-marker-alt" style="color:#ea4335;font-size:0.6rem;"></i>
+                Santiago, Naujan, Oriental Mindoro
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);border-radius:9px;padding:0.38rem 0.8rem;display:flex;align-items:center;gap:0.38rem;">
+              <i class="fas fa-expand-alt" style="font-size:0.65rem;color:rgba(255,255,255,0.75);"></i>
+              <span style="font-size:0.7rem;font-weight:600;color:#fff;">Expand</span>
+            </div>
+          </div>
+
+          <!-- Satellite chip (top-right) -->
+          <div style="position:absolute;top:13px;right:13px;background:rgba(0,0,0,0.48);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:0.26rem 0.62rem;display:flex;align-items:center;gap:0.36rem;">
+            <i class="fas fa-satellite" style="font-size:0.6rem;color:#64b5f6;"></i>
+            <span style="font-size:0.62rem;font-weight:700;color:rgba(255,255,255,0.82);letter-spacing:0.07em;">SATELLITE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFO PANEL -->
+      <div class="col-lg-5 fade-up delay-2">
+        <div style="background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:18px;height:100%;overflow:hidden;box-shadow:0 20px 56px rgba(0,0,0,0.32);">
+          <div style="height:3px;background:linear-gradient(90deg,#ea4335 0%,#f4a836 40%,#1565c0 100%);"></div>
+          <div style="padding:1.5rem 1.6rem 1.4rem;">
+            <p style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:1.2rem;">Office Details</p>
+
+            <div style="display:flex;flex-direction:column;gap:0.95rem;">
+
+              <div style="display:flex;align-items:flex-start;gap:0.85rem;">
+                <div style="width:36px;height:36px;min-width:36px;border-radius:10px;background:rgba(21,101,192,0.25);border:1px solid rgba(21,101,192,0.38);display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-building" style="color:#64b5f6;font-size:0.78rem;"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.67rem;font-weight:700;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">Building</div>
+                  <div style="font-size:0.84rem;color:rgba(255,255,255,0.88);">Municipal Hall, 1st Floor â€” PIO Office</div>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:0.85rem;">
+                <div style="width:36px;height:36px;min-width:36px;border-radius:10px;background:rgba(234,67,53,0.18);border:1px solid rgba(234,67,53,0.32);display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-map-marker-alt" style="color:#ef5350;font-size:0.78rem;"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.67rem;font-weight:700;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">Address</div>
+                  <div style="font-size:0.84rem;color:rgba(255,255,255,0.88);">Santiago, Naujan, Oriental Mindoro</div>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:0.85rem;">
+                <div style="width:36px;height:36px;min-width:36px;border-radius:10px;background:rgba(46,125,50,0.22);border:1px solid rgba(46,125,50,0.36);display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-phone-alt" style="color:#66bb6a;font-size:0.78rem;"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.67rem;font-weight:700;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">Phone</div>
+                  <div style="font-size:0.84rem;color:rgba(255,255,255,0.88);">0968-245-2430</div>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:0.85rem;">
+                <div style="width:36px;height:36px;min-width:36px;border-radius:10px;background:rgba(2,119,189,0.22);border:1px solid rgba(2,119,189,0.36);display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-envelope" style="color:#4fc3f7;font-size:0.78rem;"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.67rem;font-weight:700;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">Email</div>
+                  <a href="mailto:publicinformationoffice02@gmail.com" style="font-size:0.84rem;color:#4fc3f7;text-decoration:none;">publicinformationoffice02@gmail.com</a>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:0.85rem;">
+                <div style="width:36px;height:36px;min-width:36px;border-radius:10px;background:rgba(245,170,0,0.15);border:1px solid rgba(245,170,0,0.28);display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-clock" style="color:#ffd54f;font-size:0.78rem;"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.67rem;font-weight:700;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">Office Hours</div>
+                  <div style="font-size:0.84rem;color:rgba(255,255,255,0.88);">Mon â€“ Fri &nbsp;Â·&nbsp; 8:00 AM â€“ 5:00 PM</div>
+                  <div style="font-size:0.73rem;color:rgba(255,255,255,0.4);margin-top:1px;">No noon break</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Action row -->
+            <div style="display:flex;gap:0.55rem;margin-top:1.5rem;">
+              <a href="/contact" class="btn btn-ripple"
+                 style="flex:1;background:linear-gradient(135deg,#0d47a1,#1565c0);color:#fff;border:none;border-radius:10px;font-size:0.82rem;font-weight:600;padding:0.6rem 1rem;box-shadow:0 4px 18px rgba(21,101,192,0.38);">
+                <i class="fas fa-paper-plane me-2"></i>Send a Message
+              </a>
+              <a href="https://maps.app.goo.gl/hPHGrqmPmF6JdteKA" target="_blank" rel="noopener noreferrer"
+                 title="Get Directions"
+                 style="width:42px;min-width:42px;height:42px;align-self:center;background:rgba(234,67,53,0.14);border:1px solid rgba(234,67,53,0.28);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#ef5350;font-size:0.95rem;text-decoration:none;transition:background 0.2s,border-color 0.2s;"
+                 data-hover-bg="rgba(234,67,53,0.28)|rgba(234,67,53,0.5)">
+                <i class="fas fa-directions"></i>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Map Photo Modal -->
+<div class="modal fade" id="mapPhotoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered" style="max-width:880px;">
+    <div class="modal-content border-0" style="border-radius:20px;overflow:hidden;background:#07111f;box-shadow:0 40px 100px rgba(0,0,0,0.85);">
+
+      <!-- Floating close button -->
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+              style="position:absolute;top:13px;right:15px;z-index:20;background-color:rgba(0,0,0,0.55);border-radius:50%;padding:0.55rem;opacity:1;"></button>
+
+      <!-- Full-bleed photo -->
+      <div style="position:relative;background:#000;line-height:0;">
+        <img src="/uploads/images/map-naujan.png"
+             alt="Satellite view â€” New Naujan Municipal Hall, Santiago, Naujan, Oriental Mindoro"
+             style="width:100%;max-height:62vh;object-fit:cover;display:block;">
+        <!-- Bottom fade -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(to top,#07111f,transparent);pointer-events:none;"></div>
+        <!-- Satellite chip -->
+        <div style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.11);border-radius:7px;padding:0.28rem 0.7rem;display:flex;align-items:center;gap:0.38rem;">
+          <i class="fas fa-satellite" style="font-size:0.6rem;color:#64b5f6;"></i>
+          <span style="font-size:0.63rem;font-weight:700;color:rgba(255,255,255,0.82);letter-spacing:0.07em;">SATELLITE VIEW</span>
+        </div>
+        <!-- Pulsing pin -->
+        <div style="position:absolute;top:47%;left:50%;transform:translate(-50%,-100%);pointer-events:none;">
+          <div style="position:relative;display:inline-block;">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:rgba(234,67,53,0.2);animation:pinPulse 2s ease-out infinite;"></div>
+            <svg width="36" height="52" viewBox="0 0 36 52" style="filter:drop-shadow(0 5px 18px rgba(0,0,0,0.85));display:block;">
+              <path d="M18 0C8.06 0 0 8.06 0 18c0 13.5 18 34 18 34s18-20.5 18-34C36 8.06 27.94 0 18 0z" fill="#ea4335"/>
+              <path d="M18 2.5C9.5 2.5 2.5 9.5 2.5 18c0 12 15.5 30 15.5 30S33.5 30 33.5 18C33.5 9.5 26.5 2.5 18 2.5z" fill="#f55"/>
+              <circle cx="18" cy="18" r="7" fill="white"/>
+              <circle cx="18" cy="18" r="3.5" fill="#ea4335"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer bar -->
+      <div style="padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <div style="font-size:0.95rem;font-weight:700;color:#fff;line-height:1.3;">New Naujan Municipal Hall</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.45);margin-top:3px;display:flex;align-items:center;gap:0.4rem;">
+            <i class="fas fa-map-marker-alt" style="color:#ea4335;font-size:0.6rem;"></i>
+            PIO Office, 1st Floor &nbsp;Â·&nbsp; Santiago, Naujan, Oriental Mindoro
+          </div>
+        </div>
+        <div class="d-flex gap-2 flex-shrink-0">
+          <button type="button" data-bs-dismiss="modal"
+                  style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.65);border-radius:9px;font-size:0.79rem;padding:0.42rem 0.9rem;cursor:pointer;font-family:inherit;">
+            <i class="fas fa-times me-1"></i>Close
+          </button>
+          <a href="https://maps.app.goo.gl/hPHGrqmPmF6JdteKA" target="_blank" rel="noopener noreferrer"
+             style="background:linear-gradient(135deg,#ea4335,#c0392b);color:#fff;border:none;border-radius:9px;font-size:0.82rem;font-weight:600;padding:0.42rem 1rem;text-decoration:none;display:flex;align-items:center;gap:0.4rem;box-shadow:0 4px 16px rgba(234,67,53,0.42);">
+            <i class="fab fa-google"></i> Open in Google Maps
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes pinPulse {
+  0%   { transform: translate(-50%,-50%) scale(0.4); opacity:0.85; }
+  100% { transform: translate(-50%,-50%) scale(2.4); opacity:0; }
+}
+</style>
+
+<!-- CTA -->
+<section class="cta-section py-5 text-white">
+  <div class="container text-center position-relative" style="z-index:1;">
+    <div class="fade-up">
+      <h3 class="mb-2 fw-bold">Stay Connected with Your LGU</h3>
+      <p class="mb-4" style="opacity:0.8;max-width:520px;margin:0 auto;">
+        Follow our official channels, subscribe to announcements, and be an informed citizen of Naujan.
+      </p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="/announcements" class="btn btn-light btn-ripple"><i class="fas fa-bullhorn me-2"></i>Latest News</a>
+        <a href="/feedback" class="btn btn-outline-light btn-ripple"><i class="fas fa-comment-dots me-2"></i>Give Feedback</a>
+        <a href="/transparency" class="btn btn-outline-light btn-ripple"><i class="fas fa-eye me-2"></i>Transparency Seal</a>
+      </div>
+    </div>
+  </div>
+</section>

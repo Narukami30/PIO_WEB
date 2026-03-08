@@ -1,0 +1,138 @@
+﻿<!-- Page Header -->
+<div class="admin-page-header d-flex justify-content-between align-items-center">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/complaints">Complaints</a></li>
+        <li class="breadcrumb-item active"><%= complaint.trackingCode %></li>
+      </ol>
+    </nav>
+    <h1><i class="fas fa-exclamation-circle"></i>Complaint Details</h1>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/admin/complaints/<%= complaint._id %>/report" target="_blank" class="btn btn-outline-warning" style="border-radius:10px;padding:0.5rem 1.25rem;"><i class="fas fa-print me-1"></i>Generate Report</a>
+    <a href="/admin/complaints" class="btn btn-outline-secondary" style="border-radius:10px;padding:0.5rem 1.25rem;"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card admin-card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center" style="padding:1rem 1.25rem;">
+        <h5 class="mb-0" style="font-size:1rem;"><span class="badge bg-dark me-2" style="border-radius:6px;font-family:monospace;"><%= complaint.trackingCode %></span><%= complaint.subject %></h5>
+        <span class="badge bg-<%= statusBadgeClass(complaint.status) %>" style="border-radius:6px;font-size:0.78rem;"><%= complaint.status.replace(/_/g,' ').toUpperCase() %></span>
+      </div>
+      <div class="card-body p-4">
+        <div class="row mb-3">
+          <div class="col-md-4"><strong style="font-size:0.78rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;">Category</strong><br><span class="badge bg-secondary" style="border-radius:6px;"><%= complaint.category.replace(/_/g,' ') %></span></div>
+          <div class="col-md-4"><strong style="font-size:0.78rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;">Priority</strong><br><span class="badge bg-<%= complaint.priority === 'urgent' ? 'danger' : complaint.priority === 'high' ? 'warning' : 'info' %>" style="border-radius:6px;"><%= complaint.priority %></span></div>
+          <div class="col-md-4"><strong style="font-size:0.78rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;">Filed</strong><br><span class="small"><%= formatDate(complaint.createdAt, 'short') %></span></div>
+        </div>
+
+        <div class="p-3 rounded" style="background:var(--admin-hover);border:1px solid rgba(255,255,255,0.06);">
+          <p class="mb-0"><%= complaint.description %></p>
+        </div>
+
+        <% if (complaint.attachments && complaint.attachments.length > 0) { %>
+          <div class="mt-3">
+            <strong>Attachments:</strong>
+            <% complaint.attachments.forEach(att => { %>
+              <a href="<%= att %>" target="_blank" class="btn btn-sm btn-outline-secondary ms-1"><i class="fas fa-paperclip"></i></a>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <!-- Update History -->
+        <h6 class="mt-4 mb-3" style="font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-history me-2" style="color:var(--naujan-secondary);"></i>Update History</h6>
+        <% if (complaint.updates && complaint.updates.length > 0) { %>
+          <% complaint.updates.forEach(upd => { %>
+            <div class="mb-3 p-3 rounded" style="background:var(--admin-hover);border-left:3px solid var(--naujan-secondary);">
+              <div class="d-flex justify-content-between">
+                <span class="badge bg-<%= statusBadgeClass(upd.status) %>" style="border-radius:6px;"><%= upd.status.replace(/_/g,' ') %></span>
+                <small class="text-muted"><%= formatDate(upd.updatedAt, 'short') %></small>
+              </div>
+              <p class="mb-0 mt-2"><%= upd.message %></p>
+              <% if (upd.updatedBy) { %>
+                <small class="text-muted">By: <%= upd.updatedBy.firstName %> <%= upd.updatedBy.lastName %></small>
+              <% } %>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="text-muted">No updates yet.</p>
+        <% } %>
+
+        <!-- Add Update -->
+        <h6 class="mt-4" style="font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-edit me-2" style="color:var(--naujan-secondary);"></i>Update Complaint</h6>
+        <form action="/admin/complaints/<%= complaint._id %>/status" method="POST">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Status</label>
+              <select name="status" class="form-select" required>
+                <% ['submitted','under_review','in_progress','resolved','closed','rejected'].forEach(s => { %>
+                  <option value="<%= s %>" <%= complaint.status === s ? 'selected' : '' %>><%= s.replace(/_/g,' ') %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Priority</label>
+              <select name="priority" class="form-select">
+                <% ['low','medium','high','urgent'].forEach(p => { %>
+                  <option value="<%= p %>" <%= complaint.priority === p ? 'selected' : '' %>><%= p %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Assign To</label>
+              <select name="assignedTo" class="form-select">
+                <option value="">Unassigned</option>
+                <% if (typeof departments !== 'undefined') { %>
+                  <% departments.forEach(d => { %>
+                    <option value="<%= d._id %>" <%= (complaint.assignedTo && complaint.assignedTo.toString() === d._id.toString()) ? 'selected' : '' %>><%= d.name %></option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Update Message *</label>
+              <textarea name="message" class="form-control" rows="3" required placeholder="Describe the status update..."></textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary" style="border-radius:10px;padding:0.5rem 1.5rem;"><i class="fas fa-save me-1"></i>Update Status</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card admin-card">
+      <div class="card-header" style="padding:0.85rem 1.25rem;"><h6 class="mb-0" style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-user me-2" style="color:var(--naujan-secondary);"></i>Citizen Info</h6></div>
+      <div class="card-body">
+        <p><strong>Name:</strong> <%= complaint.citizenName %></p>
+        <p><strong>Email:</strong> <%= complaint.email || 'â€”' %></p>
+        <p><strong>Phone:</strong> <%= complaint.phone || 'â€”' %></p>
+        <p><strong>Address:</strong> <%= complaint.address || 'â€”' %></p>
+        <p><strong>Barangay:</strong> <%= complaint.barangay || 'â€”' %></p>
+      </div>
+    </div>
+
+    <% if (complaint.department) { %>
+      <div class="card admin-card mt-3">
+        <div class="card-header" style="padding:0.85rem 1.25rem;"><h6 class="mb-0" style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-building me-2" style="color:var(--naujan-secondary);"></i>Assigned Department</h6></div>
+        <div class="card-body">
+          <p class="mb-0"><%= complaint.department.name %></p>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="card admin-card mt-3">
+      <div class="card-body">
+        <form action="/admin/complaints/<%= complaint._id %>?_method=DELETE" method="POST" data-confirm="Permanently delete this complaint?">
+          <button class="btn btn-outline-danger w-100" style="border-radius:10px;"><i class="fas fa-trash me-1"></i>Delete Complaint</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

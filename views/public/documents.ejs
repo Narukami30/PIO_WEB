@@ -1,0 +1,76 @@
+<%- include('../partials/notificationBanner') %>
+<section class="page-header text-white">
+  <div class="container">
+    <h1><i class="fas fa-file-alt me-2"></i>Documents & Downloads</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active text-white">Documents</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="mb-4 fade-up">
+      <div class="d-flex flex-wrap gap-2 category-filter-pills" role="group">
+        <a href="/documents" class="btn btn-sm rounded-pill <%= !query.category ? 'btn-primary' : 'btn-outline-primary' %>">All</a>
+        <a href="/documents?category=ordinance" class="btn btn-sm rounded-pill <%= query.category === 'ordinance' ? 'btn-primary' : 'btn-outline-primary' %>">Ordinances</a>
+        <a href="/documents?category=resolution" class="btn btn-sm rounded-pill <%= query.category === 'resolution' ? 'btn-primary' : 'btn-outline-primary' %>">Resolutions</a>
+        <a href="/documents?category=executive_order" class="btn btn-sm rounded-pill <%= query.category === 'executive_order' ? 'btn-primary' : 'btn-outline-primary' %>">Executive Orders</a>
+        <a href="/documents?category=citizen_charter" class="btn btn-sm rounded-pill <%= query.category === 'citizen_charter' ? 'btn-primary' : 'btn-outline-primary' %>">Citizen Charter</a>
+        <a href="/documents?category=forms" class="btn btn-sm rounded-pill <%= query.category === 'forms' ? 'btn-primary' : 'btn-outline-primary' %>">Forms</a>
+        <a href="/documents?category=permits" class="btn btn-sm rounded-pill <%= query.category === 'permits' ? 'btn-primary' : 'btn-outline-primary' %>">Permits</a>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden fade-up">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr style="background:rgba(255,255,255,0.04);">
+              <th class="border-0 ps-4" style="color:rgba(255,255,255,0.55);">Title</th>
+              <th class="border-0" style="color:rgba(255,255,255,0.55);">Category</th>
+              <th class="border-0" style="color:rgba(255,255,255,0.55);">Department</th>
+              <th class="border-0" style="color:rgba(255,255,255,0.55);">Date</th>
+              <th class="border-0 pe-4" style="color:rgba(255,255,255,0.55);">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (documents.length > 0) { %>
+              <% documents.forEach(doc => { %>
+                <tr>
+                  <td class="ps-4">
+                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                    <strong><%= doc.title %></strong>
+                    <% if (doc.description) { %>
+                      <br><small class="text-muted"><%= truncate(doc.description, 80) %></small>
+                    <% } %>
+                  </td>
+                  <td><span class="badge bg-soft-secondary text-secondary rounded-pill"><%= doc.category.replace(/_/g, ' ') %></span></td>
+                  <td class="text-muted"><%= doc.department ? doc.department.name : '-' %></td>
+                  <td><small class="text-muted"><%= formatDate(doc.createdAt, 'short') %></small></td>
+                  <td class="pe-4">
+                    <a href="<%= doc.filePath %>" class="btn btn-sm btn-primary rounded-pill" target="_blank" download>
+                      <i class="fas fa-download me-1"></i> Get
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" class="text-center py-5 text-muted">
+                  <div class="icon-wrapper mx-auto mb-3" style="width:60px;height:60px;font-size:1.5rem;">
+                    <i class="fas fa-file-alt"></i>
+                  </div>
+                  <p>No documents found.</p>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

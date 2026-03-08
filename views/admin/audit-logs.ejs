@@ -1,0 +1,477 @@
+<!-- Page Header -->
+<div class="admin-page-header">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1">
+      <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item active">Audit Logs</li>
+    </ol>
+  </nav>
+  <h1><i class="fas fa-table"></i>Audit Logs</h1>
+</div>
+
+<!-- Excel Toolbar -->
+<div class="xl-toolbar">
+  <div class="xl-toolbar-left">
+    <div class="xl-name-box">A1</div>
+    <div class="xl-formula-bar">
+      <i class="fas fa-search xl-formula-icon"></i>
+      <input type="text" id="xlSearch" placeholder="Search logs..." class="xl-formula-input" autocomplete="off">
+    </div>
+  </div>
+  <div class="xl-toolbar-right">
+    <button class="xl-btn" id="xlClearSearchBtn"><i class="fas fa-times me-1"></i>Clear</button>
+    <% if (user && user.role && user.role.name === 'super_admin') { %>
+    <button class="xl-btn xl-btn-danger" id="xlClearAllBtn"><i class="fas fa-trash-alt me-1"></i>Clear All</button>
+    <% } %>
+    <button class="xl-btn xl-btn-primary" id="xlPrintBtn"><i class="fas fa-print me-1"></i>Print</button>
+    <div class="xl-record-count">
+      <i class="fas fa-database me-1" style="color:var(--naujan-gold);"></i>
+      <span id="xlRowCount"><%= total %></span> records
+    </div>
+  </div>
+</div>
+
+<!-- Excel Spreadsheet -->
+<div class="xl-sheet-wrap">
+  <div class="xl-sheet">
+    <!-- Column Letter Headers -->
+    <div class="xl-col-headers">
+      <div class="xl-corner"></div>
+      <div class="xl-col-hdr xl-col-hdr--rownum">&nbsp;</div>
+      <div class="xl-col-hdr xl-col-hdr--wide">A · User</div>
+      <div class="xl-col-hdr">B · Action</div>
+      <div class="xl-col-hdr xl-col-hdr--xwide">C · Details / Resource</div>
+      <div class="xl-col-hdr">D · IP Address</div>
+      <div class="xl-col-hdr">E · Date &amp; Time</div>
+      <% if (user && user.role && user.role.name === 'super_admin') { %>
+      <div class="xl-col-hdr xl-col-hdr--action">F · Delete</div>
+      <% } %>
+    </div>
+
+    <!-- Table -->
+    <div class="xl-table-wrap">
+      <table class="xl-table" id="xlTable">
+        <thead>
+          <tr class="xl-head-row">
+            <th class="xl-row-num-head">#</th>
+            <th class="xl-th xl-th--rownum">Row</th>
+            <th class="xl-th xl-th--wide">User</th>
+            <th class="xl-th">Action</th>
+            <th class="xl-th xl-th--xwide">Details / Resource</th>
+            <th class="xl-th">IP Address</th>
+            <th class="xl-th">Date &amp; Time</th>
+            <% if (user && user.role && user.role.name === 'super_admin') { %>
+            <th class="xl-th xl-th--action">Delete</th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody id="xlBody">
+          <% if (logs.length === 0) { %>
+            <tr>
+              <td colspan="7" class="xl-empty">
+                <i class="fas fa-inbox fa-2x mb-2 d-block" style="color:rgba(255,255,255,0.1);"></i>
+                No audit logs found
+              </td>
+            </tr>
+          <% } else { %>
+            <% logs.forEach((log, i) => {
+              const rowNum = i + 2;
+              const actionType = log.action
+                ? (log.action.includes('delete') ? 'danger'
+                  : log.action.includes('create') ? 'success'
+                  : log.action.includes('update') || log.action.includes('edit') ? 'warning'
+                  : log.action.includes('login') ? 'info'
+                  : 'secondary')
+                : 'secondary';
+            %>
+            <tr class="xl-row" data-search="<%= ((log.user ? log.user.firstName + ' ' + log.user.lastName : 'system') + ' ' + (log.action || '') + ' ' + (log.resource || '') + ' ' + (log.details || '') + ' ' + (log.ipAddress || '')).toLowerCase() %>">
+              <td class="xl-row-num"><%= rowNum %></td>
+              <td class="xl-cell xl-cell--num"><%= rowNum %></td>
+              <td class="xl-cell xl-cell--user">
+                <div class="xl-user">
+                  <div class="xl-user-dot"></div>
+                  <span><%= log.user ? (log.user.firstName + ' ' + log.user.lastName) : 'System' %></span>
+                </div>
+              </td>
+              <td class="xl-cell">
+                <span class="xl-badge xl-badge--<%= actionType %>"><%= log.action || '—' %></span>
+              </td>
+              <td class="xl-cell xl-cell--detail"><%= log.details ? truncate(log.details, 80) : (log.resource || '—') %></td>
+              <td class="xl-cell xl-cell--mono"><%= log.ipAddress || '—' %></td>
+              <td class="xl-cell xl-cell--mono xl-cell--date"><%= formatDate(log.createdAt, 'short') %></td>
+              <% if (user && user.role && user.role.name === 'super_admin') { %>
+              <td class="xl-cell xl-cell--action">
+                <button class="xl-del-btn" data-id="<%= log._id %>" title="Delete this log">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+              <% } %>
+            </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Sheet Tab Bar + Status Bar -->
+<div class="xl-bottom-bar">
+  <div class="xl-sheet-tabs">
+    <div class="xl-sheet-tab xl-sheet-tab--active">
+      <i class="fas fa-table me-1" style="font-size:0.65rem;"></i> audit_logs
+    </div>
+  </div>
+  <div class="xl-status-bar">
+    <span>Page <strong>1</strong> of <strong>1</strong></span>
+    <span class="xl-status-sep">|</span>
+    <span>Showing: <strong id="xlVisibleCount"><%= logs.length %></strong></span>
+    <span class="xl-status-sep">|</span>
+    <span>Total: <strong><%= total %></strong></span>
+  </div>
+</div>
+
+<!-- Pagination removed: all logs shown on one page -->
+
+<!-- Delete confirm modal -->
+<div class="modal fade" id="xlDeleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h6 class="modal-title"><i class="fas fa-trash-alt text-danger me-2"></i>Delete Log Entry</h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body pt-2" style="font-size:0.85rem;color:rgba(255,255,255,0.65);">
+        Are you sure you want to permanently delete this log entry? This cannot be undone.
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form id="xlDeleteForm" method="POST" class="m-0">
+          <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt me-1"></i>Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Clear all confirm modal -->
+<div class="modal fade" id="xlClearAllModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h6 class="modal-title"><i class="fas fa-exclamation-triangle text-warning me-2"></i>Clear All Audit Logs</h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body pt-2" style="font-size:0.85rem;color:rgba(255,255,255,0.65);">
+        This will <strong style="color:#f87171;">permanently delete every audit log record</strong>. This action cannot be undone. Are you absolutely sure?
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form action="/admin/audit-logs/clear-all" method="POST" class="m-0">
+          <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt me-1"></i>Yes, Clear All</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ── Excel Toolbar ─────────────────────────── */
+.xl-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.75rem; background: #1a2744;
+  border: 1px solid rgba(255,255,255,0.08); border-bottom: none;
+  border-radius: 8px 8px 0 0; padding: 0.5rem 0.75rem; flex-wrap: wrap;
+}
+.xl-toolbar-left { display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 0; }
+.xl-toolbar-right { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+.xl-name-box {
+  font-size: 0.72rem; font-weight: 700; font-family: 'Courier New', monospace;
+  color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+  padding: 0.28rem 0.6rem; white-space: nowrap; min-width: 42px; text-align: center;
+}
+.xl-formula-bar {
+  display: flex; align-items: center; gap: 0.5rem; flex: 1;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px; padding: 0.28rem 0.6rem;
+}
+.xl-formula-icon { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+.xl-formula-input {
+  background: none; border: none; outline: none; width: 100%;
+  font-size: 0.82rem; color: rgba(255,255,255,0.85); font-family: 'Courier New', monospace;
+}
+.xl-formula-input::placeholder { color: rgba(255,255,255,0.25); }
+.xl-btn {
+  font-size: 0.75rem; font-weight: 600; padding: 0.28rem 0.7rem;
+  border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.65);
+  cursor: pointer; transition: all 0.15s;
+}
+.xl-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.xl-btn-primary { background: rgba(21,101,192,0.25); color: var(--naujan-secondary,#3282b8); border-color: rgba(50,130,184,0.3); }
+.xl-btn-primary:hover { background: rgba(21,101,192,0.4); }
+.xl-record-count {
+  font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.45);
+  padding: 0.28rem 0.6rem; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; white-space: nowrap;
+}
+
+/* ── Sheet Wrapper ─────────────────────────── */
+.xl-sheet-wrap { border: 1px solid rgba(255,255,255,0.12); border-top: none; overflow: hidden; }
+.xl-sheet { display: flex; flex-direction: column; }
+
+/* ── Column Letter Headers ─────────────────── */
+.xl-col-headers {
+  display: flex; background: #1e2d4a;
+  border-bottom: 2px solid rgba(255,255,255,0.15);
+}
+.xl-corner {
+  width: 38px; min-width: 38px; flex-shrink: 0;
+  background: #162238; border-right: 1px solid rgba(255,255,255,0.12);
+}
+.xl-col-hdr {
+  flex: 1; text-align: center; font-size: 0.65rem; font-weight: 700;
+  color: rgba(255,255,255,0.4); letter-spacing: 0.5px;
+  padding: 0.3rem 0.4rem; border-right: 1px solid rgba(255,255,255,0.06);
+}
+.xl-col-hdr--rownum { flex: 0 0 52px; }
+.xl-col-hdr--wide   { flex: 2; }
+.xl-col-hdr--xwide  { flex: 4; }
+.xl-col-hdr--action { flex: 0 0 62px; }
+
+/* ── Table ─────────────────────────────────── */
+.xl-table-wrap { overflow-x: auto; }
+.xl-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+
+.xl-head-row th {
+  background: #1e2d4a; color: rgba(255,255,255,0.55);
+  font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  white-space: nowrap; position: sticky; top: 0; z-index: 5;
+}
+.xl-row-num-head {
+  width: 38px; background: #162238 !important;
+  border: 1px solid rgba(255,255,255,0.1) !important; text-align: center;
+}
+.xl-th--rownum { width: 52px; text-align: center; }
+.xl-th--wide   { width: 15%; }
+.xl-th--xwide  { width: 30%; }
+.xl-th--action { width: 62px; text-align: center; }
+.xl-cell--action { width: 62px; text-align: center; border: 1px solid rgba(255,255,255,0.07); }
+.xl-del-btn {
+  background: rgba(220,53,69,0.15); border: 1px solid rgba(220,53,69,0.25);
+  color: #f87171; border-radius: 4px; width: 28px; height: 26px;
+  font-size: 0.7rem; cursor: pointer; transition: all 0.15s;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.xl-del-btn:hover { background: rgba(220,53,69,0.35); color: #fff; }
+.xl-btn-danger { background: rgba(220,53,69,0.18); color: #f87171; border-color: rgba(220,53,69,0.3); }
+.xl-btn-danger:hover { background: rgba(220,53,69,0.35); color: #fff; }
+
+.xl-row-num {
+  width: 38px; text-align: center; font-size: 0.62rem; font-weight: 600;
+  color: rgba(255,255,255,0.25); background: #162238 !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  padding: 0.38rem 0.2rem; font-family: 'Courier New', monospace;
+}
+
+.xl-row:nth-child(even) td { background: rgba(255,255,255,0.018); }
+.xl-row:hover td            { background: rgba(50,130,184,0.1) !important; }
+.xl-row.xl-selected td      { background: rgba(21,101,192,0.18) !important; }
+.xl-row--hidden             { display: none; }
+
+.xl-cell {
+  padding: 0.36rem 0.6rem; border: 1px solid rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.72); vertical-align: middle;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;
+}
+.xl-cell--num    { width: 52px; text-align: center; color: rgba(255,255,255,0.25); font-family: 'Courier New', monospace; font-size: 0.65rem; }
+.xl-cell--mono   { font-family: 'Courier New', monospace; font-size: 0.72rem; color: rgba(255,255,255,0.45); }
+.xl-cell--date   { color: rgba(255,255,255,0.4); white-space: nowrap; }
+.xl-cell--detail { white-space: normal; word-break: break-word; line-height: 1.45; color: rgba(255,255,255,0.62); }
+.xl-cell--user   { font-weight: 600; color: rgba(255,255,255,0.82); }
+
+.xl-user { display: flex; align-items: center; gap: 0.45rem; }
+.xl-user-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--naujan-gold,#f0a500); flex-shrink: 0; }
+
+.xl-badge {
+  display: inline-block; font-size: 0.64rem; font-weight: 700;
+  letter-spacing: 0.3px; text-transform: uppercase;
+  padding: 0.18rem 0.48rem; border-radius: 3px;
+  font-family: 'Courier New', monospace;
+}
+.xl-badge--success  { background: rgba(25,135,84,0.2);  color: #4ade80; border: 1px solid rgba(25,135,84,0.3); }
+.xl-badge--danger   { background: rgba(220,53,69,0.2);  color: #f87171; border: 1px solid rgba(220,53,69,0.3); }
+.xl-badge--warning  { background: rgba(255,193,7,0.15); color: #fbbf24; border: 1px solid rgba(255,193,7,0.25); }
+.xl-badge--info     { background: rgba(13,202,240,0.15);color: #38bdf8; border: 1px solid rgba(13,202,240,0.25); }
+.xl-badge--secondary{ background: rgba(255,255,255,0.06);color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.1); }
+
+.xl-empty {
+  text-align: center; padding: 3rem 1rem;
+  color: rgba(255,255,255,0.3); font-size: 0.82rem;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* ── Bottom Bar ────────────────────────────── */
+.xl-bottom-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #1a2744; border: 1px solid rgba(255,255,255,0.08);
+  border-top: 2px solid rgba(255,255,255,0.1);
+  padding: 0.3rem 0.75rem; gap: 1rem; flex-wrap: wrap;
+  border-radius: 0 0 8px 8px;
+}
+.xl-sheet-tabs { display: flex; gap: 0.25rem; }
+.xl-sheet-tab {
+  font-size: 0.68rem; font-weight: 600; color: rgba(255,255,255,0.4);
+  padding: 0.2rem 0.75rem; border-radius: 4px 4px 0 0;
+  border: 1px solid rgba(255,255,255,0.08); border-bottom: none;
+  background: rgba(255,255,255,0.04); cursor: pointer;
+}
+.xl-sheet-tab--active { color: rgba(255,255,255,0.85); background: rgba(50,130,184,0.15); border-color: rgba(50,130,184,0.3); }
+.xl-status-bar { display: flex; align-items: center; gap: 0.5rem; font-size: 0.68rem; color: rgba(255,255,255,0.4); font-weight: 500; }
+.xl-status-bar strong { color: rgba(255,255,255,0.7); }
+.xl-status-sep { color: rgba(255,255,255,0.12); }
+</style>
+
+<script nonce="<%= cspNonce %>">
+document.addEventListener('DOMContentLoaded', function () {
+  const xlSearch       = document.getElementById('xlSearch');
+  const xlBody         = document.getElementById('xlBody');
+  const xlVisibleCount = document.getElementById('xlVisibleCount');
+  const nameBox        = document.querySelector('.xl-name-box');
+
+  xlSearch.addEventListener('input', filterRows);
+
+  function filterRows() {
+    const q = xlSearch.value.toLowerCase().trim();
+    const rows = xlBody.querySelectorAll('.xl-row');
+    let visible = 0;
+    rows.forEach(row => {
+      const match = !q || row.dataset.search.includes(q);
+      row.classList.toggle('xl-row--hidden', !match);
+      if (match) visible++;
+    });
+    xlVisibleCount.textContent = visible;
+  }
+
+  window.clearSearch = function () {
+    xlSearch.value = '';
+    filterRows();
+  };
+
+  document.getElementById('xlClearSearchBtn').addEventListener('click', clearSearch);
+
+  // Delete single log
+  const deleteModal  = new bootstrap.Modal(document.getElementById('xlDeleteModal'));
+  const deleteForm   = document.getElementById('xlDeleteForm');
+  const clearAllBtn  = document.getElementById('xlClearAllBtn');
+  const clearAllModal = document.getElementById('xlClearAllModal')
+                        ? new bootstrap.Modal(document.getElementById('xlClearAllModal')) : null;
+
+  document.getElementById('xlBody').addEventListener('click', e => {
+    const delBtn = e.target.closest('.xl-del-btn');
+    if (delBtn) {
+      const id = delBtn.dataset.id;
+      deleteForm.action = `/admin/audit-logs/${id}/delete`;
+      deleteModal.show();
+      return;
+    }
+    // Row select
+    const row = e.target.closest('.xl-row');
+    if (!row) return;
+    document.querySelectorAll('#xlBody .xl-row').forEach(r => r.classList.remove('xl-selected'));
+    row.classList.add('xl-selected');
+    const rn = row.querySelector('.xl-row-num')?.textContent?.trim();
+    if (rn) nameBox.textContent = 'A' + rn;
+  });
+
+  if (clearAllBtn && clearAllModal) {
+    clearAllBtn.addEventListener('click', () => clearAllModal.show());
+  }
+
+  // Print — build a clean print window with only the visible rows
+  document.getElementById('xlPrintBtn').addEventListener('click', function () {
+    const visibleRows = Array.from(xlBody.querySelectorAll('.xl-row:not(.xl-row--hidden)'));
+    const searchVal   = xlSearch.value.trim();
+    const totalShown  = visibleRows.length;
+    const now         = new Date().toLocaleString('en-PH', { dateStyle: 'long', timeStyle: 'short' });
+
+    let rows = '';
+    visibleRows.forEach((r, idx) => {
+      const cells = r.querySelectorAll('td');
+      // cells: 0=row-num, 1=row-num-dup, 2=user, 3=action, 4=details, 5=ip, 6=date
+      const user    = cells[2]?.innerText?.trim()  || '—';
+      const action  = cells[3]?.innerText?.trim()  || '—';
+      const details = cells[4]?.innerText?.trim()  || '—';
+      const ip      = cells[5]?.innerText?.trim()  || '—';
+      const date    = cells[6]?.innerText?.trim()  || '—';
+      const bg      = idx % 2 === 0 ? '#fff' : '#f5f8ff';
+      rows += `<tr style="background:${bg}">`
+            + `<td style="text-align:center;color:#999;font-family:monospace;">${idx + 1}</td>`
+            + `<td>${user}</td>`
+            + `<td><span class="badge">${action}</span></td>`
+            + `<td>${details}</td>`
+            + `<td style="font-family:monospace;font-size:0.78em;">${ip}</td>`
+            + `<td style="font-family:monospace;font-size:0.78em;">${date}</td>`
+            + `</tr>`;
+    });
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+      <title>Audit Logs — PIO Naujan</title>
+      <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: Arial, sans-serif; font-size: 9pt; color: #111; background: #fff; }
+        .print-header { padding: 0.6cm 0.8cm 0.4cm; border-bottom: 2px solid #0f4c75; margin-bottom: 0.3cm; }
+        .print-header h1 { font-size: 13pt; color: #0f4c75; font-weight: 800; margin-bottom: 2px; }
+        .print-header p  { font-size: 7.5pt; color: #666; }
+        .print-meta { padding: 0 0.8cm 0.3cm; font-size: 7.5pt; color: #555; display:flex; gap: 1.5cm; }
+        table { width: 100%; border-collapse: collapse; margin: 0 0.8cm; width: calc(100% - 1.6cm); }
+        th { background: #0f4c75; color: #fff; font-size: 7.5pt; font-weight: 700;
+             text-transform: uppercase; letter-spacing: 0.4px;
+             padding: 5px 6px; border: 1px solid #0a3a5c; text-align: left; }
+        td { padding: 4px 6px; border: 1px solid #dde3ee; font-size: 8.5pt; vertical-align: middle; }
+        .badge { display:inline-block; padding: 1px 5px; border-radius: 3px; font-size: 7pt;
+                 font-weight: 700; text-transform: uppercase; font-family: monospace;
+                 background: #e9ecef; color: #333; border: 1px solid #ccc; }
+        .print-footer { margin-top: 0.5cm; padding: 0.2cm 0.8cm; border-top: 1px solid #dde; font-size: 7pt; color: #aaa; display:flex; justify-content:space-between; }
+        @page { size: A4 landscape; margin: 0.8cm; }
+        @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+      </style>
+    </head><body>
+      <div class="print-header">
+        <h1><i>&#128203;</i> Audit Logs — Public Information Office Naujan</h1>
+        <p>Official system activity record</p>
+      </div>
+      <div class="print-meta">
+        <span><strong>Printed:</strong> ${now}</span>
+        ${searchVal ? `<span><strong>Filter:</strong> "${searchVal}"</span>` : ''}
+        <span><strong>Records shown:</strong> ${totalShown}</span>
+      </div>
+      <table>
+        <thead><tr>
+          <th style="width:28px;">#</th>
+          <th style="width:14%">User</th>
+          <th style="width:11%">Action</th>
+          <th>Details / Resource</th>
+          <th style="width:12%">IP Address</th>
+          <th style="width:14%">Date &amp; Time</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="print-footer">
+        <span>PIO Naujan — Confidential System Log</span>
+        <span>Total records: ${totalShown}</span>
+      </div>
+    </body></html>`;
+
+    const win = window.open('', '_blank', 'width=1100,height=700');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    win.onload = function () { win.print(); };
+  });
+});
+</script>

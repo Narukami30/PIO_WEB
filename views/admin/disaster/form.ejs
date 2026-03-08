@@ -1,0 +1,62 @@
+﻿<!-- Page Header -->
+<div class="admin-page-header">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1">
+      <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="/admin/disaster">DRRM</a></li>
+      <li class="breadcrumb-item active"><%= isEdit ? 'Edit' : 'Create' %></li>
+    </ol>
+  </nav>
+  <h1><i class="fas fa-exclamation-triangle"></i><%= isEdit ? 'Edit' : 'New' %> Disaster Alert</h1>
+</div>
+
+<div class="card admin-card">
+  <div class="card-body p-4">
+    <form action="<%= isEdit ? '/admin/disaster/' + update._id + '?_method=PUT' : '/admin/disaster' %>" method="POST">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Title *</label>
+          <input type="text" name="title" class="form-control" required value="<%= isEdit ? update.title : '' %>">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Alert Level *</label>
+          <select name="alertLevel" class="form-select" required>
+            <% ['info','advisory','warning','critical'].forEach(l => { %>
+              <option value="<%= l %>" <%= (isEdit && update.alertLevel === l) ? 'selected' : '' %>><%= l.toUpperCase() %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Type *</label>
+          <select name="type" class="form-select" required>
+            <% ['typhoon','flood','earthquake','fire','landslide','volcanic','pandemic','general'].forEach(t => { %>
+              <option value="<%= t %>" <%= (isEdit && update.type === t) ? 'selected' : '' %>><%= t.replace(/_/g,' ') %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Content *</label>
+          <textarea name="content" class="form-control" rows="6" required><%= isEdit ? update.content : '' %></textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Affected Barangays (comma-separated)</label>
+          <input type="text" name="affectedBarangays" class="form-control" placeholder="e.g. Poblacion, San Agustin, Estrella" value="<%= (isEdit && update.affectedBarangays) ? update.affectedBarangays.join(', ') : '' %>">
+        </div>
+        <div class="col-md-6 d-flex align-items-end gap-3">
+          <div class="form-check">
+            <input type="checkbox" name="isActive" class="form-check-input" id="isActive" <%= (!isEdit || update.isActive) ? 'checked' : '' %>>
+            <label class="form-check-label" for="isActive">Active</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" name="isPublished" class="form-check-input" id="isPublished" <%= (isEdit && update.isPublished) ? 'checked' : '' %>>
+            <label class="form-check-label" for="isPublished">Published</label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3" style="border-top:1px solid rgba(255,255,255,0.08);">
+        <button type="submit" class="btn btn-primary" style="border-radius:10px;padding:0.5rem 1.5rem;"><i class="fas fa-save me-1"></i>Save Alert</button>
+        <a href="/admin/disaster" class="btn btn-outline-secondary ms-2" style="border-radius:10px;padding:0.5rem 1.5rem;"><i class="fas fa-times me-1"></i>Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>

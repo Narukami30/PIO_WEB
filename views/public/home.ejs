@@ -1,0 +1,326 @@
+<!-- Hero Section -->
+<section class="hero-section" <% if (siteSettings && siteSettings.heroImage) { %>style="background-image:url('<%= siteSettings.heroImage %>');"<% } %>>
+  <div class="hero-overlay">
+    <div class="container">
+      <div class="row align-items-center min-vh-75">
+        <div class="col-lg-7 text-white py-4 py-lg-5">
+          <!-- Mobile logo (visible below lg) -->
+          <div class="hero-logo-mobile">
+            <img src="<%= (siteSettings && siteSettings.heroLogo) || '/uploads/images/pio-logo.png' %>"
+                 data-hide-on-error="parent"
+                 alt="Municipality of Naujan Seal">
+          </div>
+          <div class="fade-up">
+            <span class="badge bg-warning text-dark px-3 py-2 mb-3 bounce-in" style="font-size:0.8rem;border-radius:50px;">
+              <i class="fas fa-star me-1"></i> Public Information Office Naujan
+            </span>
+            <h1 class="fw-bold mb-3">
+              Municipality of<br><span style="color:var(--naujan-gold);">Naujan</span>
+            </h1>
+            <p class="lead mb-1" style="opacity:0.9;">Oriental Mindoro, Philippines</p>
+            <p class="mb-4" style="opacity:0.7;max-width:500px;">Your gateway to transparent governance, community services, and real-time municipal updates.</p>
+            <div class="d-flex gap-3 flex-wrap">
+              <a href="/announcements" class="btn btn-light btn-lg btn-ripple"><i class="fas fa-bullhorn me-2"></i>Latest News</a>
+              <a href="/services" class="btn btn-outline-light btn-lg btn-ripple"><i class="fas fa-concierge-bell me-2"></i>Services</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block text-center py-5">
+          <div class="fade-up" style="animation-delay:0.2s;">
+            <img src="<%= (siteSettings && siteSettings.heroLogo) || '/uploads/images/pio-logo.png' %>"
+                 data-hide-on-error
+                 alt="Municipality of Naujan Seal"
+                 class="hero-float-img float-anim-slow"
+                 style="width:100%;max-width:300px;border-radius:var(--radius-xl);filter:drop-shadow(0 25px 50px rgba(0,0,0,0.4));">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Active Disaster Alerts -->
+<% if (disasterUpdates && disasterUpdates.length > 0) { %>
+<section class="py-3">
+  <div class="container">
+    <% disasterUpdates.forEach(alert => { %>
+      <div class="alert alert-<%= alertLevelClass(alert.alertLevel) %> d-flex flex-column flex-sm-row align-items-start align-items-sm-center mb-2" style="border-radius:var(--radius-md);border:none;gap:0.75rem;">
+        <div class="d-flex align-items-center flex-grow-1" style="gap:0.75rem;min-width:0;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div style="min-width:0;">
+            <strong><%= alert.title %></strong>
+            <span class="ms-1 badge bg-<%= alertLevelClass(alert.alertLevel) %>"><%= alert.alertLevel.toUpperCase() %></span>
+            <p class="mb-0 small mt-1" style="word-break:break-word;"><%= truncate(alert.content, 200) %></p>
+          </div>
+        </div>
+        <a href="/disaster-updates" class="btn btn-sm btn-dark flex-shrink-0" style="border-radius:50px;">Details</a>
+      </div>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
+<!-- Quick Access Cards -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5 fade-up">
+      <h2 class="section-title">Quick Access</h2>
+      <div class="section-divider section-divider-center"></div>
+      <p class="section-subtitle">Access essential municipal services and information</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6 col-6 scale-up delay-1">
+        <a href="/transparency" class="text-decoration-none">
+          <div class="card quick-card text-center h-100 card-tilt shine-hover">
+            <div class="card-body">
+              <div class="icon-wrapper bg-soft-primary text-primary icon-bounce-hover">
+                <i class="fas fa-eye"></i>
+              </div>
+              <h6>Transparency Seal</h6>
+              <small>Budget & Reports</small>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-3 col-md-6 col-6 scale-up delay-2">
+        <a href="/services" class="text-decoration-none">
+          <div class="card quick-card text-center h-100 card-tilt shine-hover">
+            <div class="card-body">
+              <div class="icon-wrapper bg-soft-success text-success icon-bounce-hover">
+                <i class="fas fa-concierge-bell"></i>
+              </div>
+              <h6>Citizen's Charter</h6>
+              <small>Government Services</small>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-3 col-md-6 col-6 scale-up delay-3">
+        <a href="/complaint" class="text-decoration-none">
+          <div class="card quick-card text-center h-100 card-tilt shine-hover">
+            <div class="card-body">
+              <div class="icon-wrapper bg-soft-danger text-danger icon-bounce-hover">
+                <i class="fas fa-flag"></i>
+              </div>
+              <h6>File Complaint</h6>
+              <small>Report Issues</small>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-3 col-md-6 col-6 scale-up delay-4">
+        <a href="/disaster-updates" class="text-decoration-none">
+          <div class="card quick-card text-center h-100 card-tilt shine-hover">
+            <div class="card-body">
+              <div class="icon-wrapper bg-soft-warning text-warning icon-bounce-hover">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h6>DRRM Updates</h6>
+              <small>Disaster Alerts</small>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-5">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-6 col-md-3 fade-up delay-1">
+        <div class="stat-item pulse-glow">
+          <h2 class="counter" data-target="70">0</h2>
+          <p class="mb-0">Barangays</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 fade-up delay-2">
+        <div class="stat-item pulse-glow">
+          <h2 class="counter" data-target="53">0</h2>
+          <p class="mb-0">Departments</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 fade-up delay-3">
+        <div class="stat-item pulse-glow">
+          <h2><span class="counter" data-target="109122">0</span></h2>
+          <p class="mb-0">Population</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 fade-up delay-4">
+        <div class="stat-item pulse-glow">
+          <h2><span class="counter" data-target="100">0</span>+</h2>
+          <p class="mb-0">Services</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest Announcements -->
+<section class="py-5" style="background:var(--naujan-body);">
+  <div class="container">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end mb-4 gap-2 fade-up">
+      <div>
+        <h2 class="section-title mb-0">Latest Announcements</h2>
+        <div class="section-divider"></div>
+      </div>
+      <a href="/announcements" class="btn btn-outline-primary flex-shrink-0" style="border-radius:50px;">View All <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+    <div class="row g-4">
+      <% if (announcements.length > 0) { %>
+        <% announcements.forEach((item, idx) => { %>
+          <div class="col-sm-6 col-md-4 fade-up">
+            <div class="card h-100 card-hover border-0 shadow-sm shine-hover" style="overflow:hidden;">
+              <div style="overflow:hidden;">
+                <% if (item.image) { %>
+                  <img src="<%= item.image %>" class="card-img-top" alt="<%= item.title %>" style="height: 210px; object-fit: cover;">
+                <% } else { %>
+                  <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 210px; background: linear-gradient(135deg, #0f4c75, #3282b8);">
+                    <i class="fas fa-newspaper fa-3x text-white" style="opacity:0.5;"></i>
+                  </div>
+                <% } %>
+              </div>
+              <div class="card-body">
+                <div class="d-flex gap-2 mb-2">
+                  <span class="badge bg-primary"><%= item.category %></span>
+                  <% if (item.isPinned) { %><span class="badge bg-warning text-dark"><i class="fas fa-thumbtack"></i> Pinned</span><% } %>
+                </div>
+                <h5 class="card-title" style="font-size:1.05rem;line-height:1.4;"><%= item.title %></h5>
+                <p class="card-text small" style="color:var(--text-muted);"><%= truncate(item.excerpt || item.content, 100) %></p>
+              </div>
+              <div class="card-footer bg-transparent d-flex justify-content-between align-items-center" style="border-top:1px solid var(--border-color);">
+                <small style="color:var(--text-muted);"><i class="far fa-clock me-1"></i><%= formatDate(item.publishedAt || item.createdAt, 'short') %></small>
+                <a href="/announcements/<%= item.slug %>" class="btn btn-sm btn-primary" style="border-radius:50px;padding:0.3rem 1rem;">Read <i class="fas fa-arrow-right ms-1" style="font-size:0.7rem;"></i></a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-12 text-center py-5" style="color:var(--text-muted);">
+          <i class="fas fa-newspaper fa-3x mb-3" style="opacity:0.3;"></i>
+          <p>No announcements yet. Check back soon!</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<!-- Upcoming Events -->
+<% if (events && events.length > 0) { %>
+<section class="py-5" style="background:var(--naujan-light);">
+  <div class="container">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end mb-4 gap-2 fade-up">
+      <div>
+        <h2 class="section-title mb-0">Upcoming Events</h2>
+        <div class="section-divider"></div>
+      </div>
+      <a href="/events" class="btn btn-outline-success flex-shrink-0" style="border-radius:50px;">View All</a>
+    </div>
+    <div class="row g-4">
+      <% events.forEach(evt => { %>
+        <div class="col-md-3 col-6 fade-up">
+          <div class="card h-100 card-hover border-0 shadow-sm text-center">
+            <div class="card-body p-4">
+              <div class="event-date-badge mx-auto mb-3">
+                <span class="event-month"><%= new Date(evt.startDate).toLocaleDateString('en-PH', { month: 'short' }) %></span>
+                <span class="event-day"><%= new Date(evt.startDate).getDate() %></span>
+              </div>
+              <h6 style="font-size:0.92rem;"><%= evt.title %></h6>
+              <p class="small mb-2" style="color:var(--text-muted);"><i class="fas fa-map-marker-alt me-1"></i> <%= evt.location || 'Naujan' %></p>
+              <span class="badge bg-success"><%= evt.category %></span>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- About Section -->
+<section class="py-5">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 slide-right">
+        <div class="img-hover-zoom" style="border-radius:var(--radius-xl);overflow:hidden;">
+          <img src="<%= (siteSettings && siteSettings.aboutNaujanPhoto) || '/uploads/images/aboutnaujan.jpg' %>"
+               data-fallback-src="/uploads/images/heropic.jpg"
+               alt="Naujan Town" 
+               style="width:100%;border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);">
+        </div>
+      </div>
+      <div class="col-lg-6 slide-left">
+        <span class="badge bg-soft-primary text-primary px-3 py-2 mb-3" style="border-radius:50px;">About Naujan</span>
+        <h2 class="section-title"><%= (siteSettings && siteSettings.aboutNaujanTitle) || 'A Gateway to Natural Wonders' %></h2>
+        <div class="section-divider"></div>
+        <p style="color:var(--text-secondary);line-height:1.8;">
+          <%= (siteSettings && siteSettings.aboutNaujanDescription) || 'Naujan is a first-class municipality in the province of Oriental Mindoro, known for its breathtaking Naujan Lake — one of the largest freshwater lakes in the Philippines. The municipality is committed to transparent governance, sustainable development, and empowering its citizens through accessible public services.' %>
+        </p>
+        <div class="row g-3 mt-3">
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(21,101,192,0.18);display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0;">
+                <i class="fas fa-mountain text-primary"></i>
+              </div>
+              <div>
+                <strong style="font-size:0.85rem;">Eco-Tourism</strong>
+                <small class="d-block" style="color:var(--text-muted);font-size:0.75rem;">Naujan Lake & trails</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(25,135,84,0.18);display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0;">
+                <i class="fas fa-seedling text-success"></i>
+              </div>
+              <div>
+                <strong style="font-size:0.85rem;">Agriculture</strong>
+                <small class="d-block" style="color:var(--text-muted);font-size:0.75rem;">Rice & coconut</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(240,165,0,0.18);display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0;">
+                <i class="fas fa-hands-helping text-warning"></i>
+              </div>
+              <div>
+                <strong style="font-size:0.85rem;">Community</strong>
+                <small class="d-block" style="color:var(--text-muted);font-size:0.75rem;">70 barangays</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(220,53,69,0.18);display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0;">
+                <i class="fas fa-shield-alt text-danger"></i>
+              </div>
+              <div>
+                <strong style="font-size:0.85rem;">Resilience</strong>
+                <small class="d-block" style="color:var(--text-muted);font-size:0.75rem;">DRRM prepared</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5 text-white">
+  <div class="container text-center position-relative" style="z-index:1;">
+    <div class="fade-up">
+      <h3 class="mb-2 fw-bold">Need Assistance?</h3>
+      <p class="mb-4" style="opacity:0.8;max-width:500px;margin:0 auto;">Submit feedback, file a complaint, or get in touch with your local government.</p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="/feedback" class="btn btn-light btn-ripple"><i class="fas fa-comment-dots me-2"></i>Submit Feedback</a>
+        <a href="/complaint" class="btn btn-outline-light btn-ripple"><i class="fas fa-flag me-2"></i>File Complaint</a>
+        <a href="/contact" class="btn btn-outline-light btn-ripple"><i class="fas fa-envelope me-2"></i>Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
