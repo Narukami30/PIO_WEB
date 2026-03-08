@@ -1,16 +1,24 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
 
 let _transporter = null;
 
-function getTransporter() {
+async function ensureTransporter() {
   if (_transporter) return _transporter;
   if (process.env.EMAIL_HOST) {
+    // Resolve hostname to IPv4 explicitly — Render lacks IPv6 connectivity
+    let host = process.env.EMAIL_HOST;
+    try {
+      const [ipv4] = await dns.promises.resolve4(host);
+      if (ipv4) host = ipv4;
+    } catch (_) { /* fall back to hostname */ }
+
     _transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
+      host,
       port: parseInt(process.env.EMAIL_PORT) || 587,
       secure: process.env.EMAIL_SECURE === 'true',
       auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-      family: 4
+      tls: { servername: process.env.EMAIL_HOST }
     });
   } else {
     // Dev fallback: print OTP to console if no SMTP configured
@@ -31,7 +39,8 @@ function getTransporter() {
 async function sendOtpEmail(toEmail, firstName, otpCode) {
   const appName = process.env.APP_NAME || 'LGU Naujan PIS';
   const from = process.env.EMAIL_FROM || `"${appName}" <no-reply@naujan.gov.ph>`;
-  await getTransporter().sendMail({
+  const transporter = await ensureTransporter();
+  await transporter.sendMail({
     from,
     to: toEmail,
     subject: `Your Login Verification Code — ${appName}`,
@@ -54,7 +63,8 @@ async function sendOtpEmail(toEmail, firstName, otpCode) {
 async function sendResetEmail(toEmail, firstName, resetUrl) {
   const appName = process.env.APP_NAME || 'LGU Naujan PIS';
   const from = process.env.EMAIL_FROM || `"${appName}" <no-reply@naujan.gov.ph>`;
-  await getTransporter().sendMail({
+  const transporter = await ensureTransporter();
+  await transporter.sendMail({
     from,
     to: toEmail,
     subject: `Password Reset — ${appName}`,
