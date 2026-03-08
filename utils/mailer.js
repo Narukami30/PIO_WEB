@@ -1,46 +1,28 @@
-const nodemailer = require('nodemailer');
-const dns = require('dns');
+const { Resend } = require('resend');
 
-let _transporter = null;
-
-async function ensureTransporter() {
-  if (_transporter) return _transporter;
-  if (process.env.EMAIL_HOST) {
-    // Resolve hostname to IPv4 explicitly — Render lacks IPv6 connectivity
-    let host = process.env.EMAIL_HOST;
-    try {
-      const [ipv4] = await dns.promises.resolve4(host);
-      if (ipv4) host = ipv4;
-    } catch (_) { /* fall back to hostname */ }
-
-    _transporter = nodemailer.createTransport({
-      host,
-      port: parseInt(process.env.EMAIL_PORT) || 587,
-      secure: process.env.EMAIL_SECURE === 'true',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-      tls: { servername: process.env.EMAIL_HOST }
-    });
-  } else {
-    // Dev fallback: print OTP to console if no SMTP configured
-    _transporter = {
-      sendMail: async (opts) => {
-        console.log('\n========================================');
-        console.log('[MAILER DEV] No EMAIL_HOST configured');
-        console.log(`  To:   ${opts.to}`);
-        console.log(`  Code: ${opts.text.match(/\d{6}/)?.[0] || 'see body'}`);
-        console.log('========================================\n');
-        return { messageId: 'dev-fallback' };
-      }
-    };
+function getClient() {
+  if (process.env.RESEND_API_KEY) {
+    return new Resend(process.env.RESEND_API_KEY);
   }
-  return _transporter;
+  // Dev fallback: print to console
+  return {
+    emails: {
+      send: async (opts) => {
+        console.log('\n========================================');
+        console.log('[MAILER DEV] No RESEND_API_KEY configured');
+        console.log(`  To:   ${opts.to}`);
+        console.log(`  Code: ${(opts.text || '').match(/\d{6}/)?.[0] || 'see body'}`);
+        console.log('========================================\n');
+        return { data: { id: 'dev-fallback' } };
+      }
+    }
+  };
 }
 
 async function sendOtpEmail(toEmail, firstName, otpCode) {
   const appName = process.env.APP_NAME || 'LGU Naujan PIS';
-  const from = process.env.EMAIL_FROM || `"${appName}" <no-reply@naujan.gov.ph>`;
-  const transporter = await ensureTransporter();
-  await transporter.sendMail({
+  const from = process.env.EMAIL_FROM || `${appName} <onboarding@resend.dev>`;
+  await getClient().emails.send({
     from,
     to: toEmail,
     subject: `Your Login Verification Code — ${appName}`,
@@ -62,9 +44,8 @@ async function sendOtpEmail(toEmail, firstName, otpCode) {
 
 async function sendResetEmail(toEmail, firstName, resetUrl) {
   const appName = process.env.APP_NAME || 'LGU Naujan PIS';
-  const from = process.env.EMAIL_FROM || `"${appName}" <no-reply@naujan.gov.ph>`;
-  const transporter = await ensureTransporter();
-  await transporter.sendMail({
+  const from = process.env.EMAIL_FROM || `${appName} <onboarding@resend.dev>`;
+  await getClient().emails.send({
     from,
     to: toEmail,
     subject: `Password Reset — ${appName}`,
