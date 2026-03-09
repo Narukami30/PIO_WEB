@@ -3,7 +3,7 @@
     <div class="row g-4">
       <div class="col-lg-4 col-md-6 mb-3">
         <div class="d-flex align-items-center mb-3">
-          <img src="/uploads/images/pio-logo.png"
+          <img src="<%= typeof siteLogo !== 'undefined' && siteLogo ? siteLogo : '/uploads/images/pio-logo.png' %>"
                data-hide-on-error="sibling"
                alt="PIO Logo"
                style="width:44px;height:44px;object-fit:contain;border-radius:12px;background:rgba(255,255,255,0.1);padding:5px;margin-right:12px;">
