@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('dns').setDefaultResultOrder('ipv4first');
 const express = require('express');
 const mongoose = require('mongoose');
 // Removed express-session and connect-mongo
@@ -122,9 +123,8 @@ app.use((req, res, next) => {
     return res.status(403).send('Forbidden request referer');
   }
 
-  if (isProduction && origin === 'null' && !referer) {
-    console.warn(`[CSRF BLOCKED] Null origin without referer: ${req.method} ${req.originalUrl}`);
-    return res.status(403).send('Forbidden request origin');
+  if (!hasConcreteOrigin && !referer) {
+    return next();
   }
 
   next();
