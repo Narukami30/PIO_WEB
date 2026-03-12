@@ -89,9 +89,17 @@ exports.postLogin = async (req, res) => {
     user.otpAttempts = 0;
     await user.save();
 
-    // Send OTP email
+    // Send OTP email — errors are caught so a transient SMTP outage doesn't block login
     const { sendOtpEmail } = require('../utils/mailer');
-    await sendOtpEmail(user.email, user.firstName, otpRaw);
+    try {
+      await sendOtpEmail(user.email, user.firstName, otpRaw);
+    } catch (emailErr) {
+      console.error('OTP email delivery failed:', emailErr.message);
+      // Clean up the pending OTP so the account is left in a consistent state
+      await User.updateOne({ _id: user._id }, { otpCode: null, otpExpires: null, otpAttempts: 0 });
+      req.flash('error_msg', 'Email service is currently unavailable. Please try again later or contact the administrator.');
+      return res.redirect('/auth/login');
+    }
 
     // Issue short-lived pending cookie (NOT a full auth token)
     const jwtLib = require('jsonwebtoken');
@@ -407,7 +415,15 @@ exports.postForgotPassword = async (req, res) => {
     const resetUrl = `${baseUrl}/auth/reset-password/${rawToken}`;
 
     const { sendResetEmail } = require('../utils/mailer');
-    await sendResetEmail(user.email, user.firstName, resetUrl);
+    try {
+      await sendResetEmail(user.email, user.firstName, resetUrl);
+    } catch (emailErr) {
+      console.error('Password-reset email delivery failed:', emailErr.message);
+      // Clean up the reset token so the account is left in a consistent state
+      await User.updateOne({ _id: user._id }, { resetToken: null, resetExpires: null });
+      req.flash('error_msg', 'Email service is currently unavailable. Please try again later or contact the administrator.');
+      return res.redirect('/auth/forgot-password');
+    }
 
     await AuditLog.create({
       user: user._id,

@@ -2,6 +2,11 @@ const nodemailer = require('nodemailer');
 
 let _transporter = null;
 
+// Connection error codes that indicate a broken/unreachable SMTP server.
+// When these occur the cached transporter is reset so the next call creates a fresh one.
+// ECONNECTION is a nodemailer-internal code (SMTPConnection.js) for wrapped TCP errors.
+const CONNECTION_ERROR_CODES = new Set(['ECONNECTION', 'ENOTFOUND', 'ENETUNREACH', 'ETIMEDOUT', 'ECONNRESET', 'ECONNREFUSED']);
+
 function getTransporter() {
   if (_transporter) return _transporter;
   if (process.env.EMAIL_HOST) {
@@ -9,7 +14,12 @@ function getTransporter() {
       host: process.env.EMAIL_HOST,
       port: parseInt(process.env.EMAIL_PORT) || 587,
       secure: process.env.EMAIL_SECURE === 'true',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      // Force IPv4 to avoid ENETUNREACH errors on hosts without IPv6 routing
+      family: 4,
+      connectionTimeout: 10000,  // 10 s — initial TCP connect
+      greetingTimeout: 10000,    // 10 s — SMTP greeting after connect
+      socketTimeout: 30000       // 30 s — idle timeout during data transfer (longer is safe)
     });
   } else {
     // Dev fallback: print OTP to console if no SMTP configured
@@ -30,12 +40,13 @@ function getTransporter() {
 async function sendOtpEmail(toEmail, firstName, otpCode) {
   const appName = process.env.APP_NAME || 'LGU Naujan PIS';
   const from = process.env.EMAIL_FROM || `"${appName}" <no-reply@naujan.gov.ph>`;
-  await getTransporter().sendMail({
-    from,
-    to: toEmail,
-    subject: `Your Login Verification Code — ${appName}`,
-    text: `Hello ${firstName},\n\nYour one-time login verification code is:\n\n  ${otpCode}\n\nThis code expires in 10 minutes. Do not share it with anyone.\n\nIf you did not attempt to log in, contact the system administrator immediately.\n\n— ${appName}`,
-    html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:2rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
+  try {
+    await getTransporter().sendMail({
+      from,
+      to: toEmail,
+      subject: `Your Login Verification Code — ${appName}`,
+      text: `Hello ${firstName},\n\nYour one-time login verification code is:\n\n  ${otpCode}\n\nThis code expires in 10 minutes. Do not share it with anyone.\n\nIf you did not attempt to log in, contact the system administrator immediately.\n\n— ${appName}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:2rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
       <h2 style="color:#1a2332;margin-top:0;">Login Verification</h2>
       <p style="color:#555;">Hello <strong>${firstName}</strong>,</p>
       <p style="color:#555;">Enter this code to complete your login:</p>
@@ -47,18 +58,25 @@ async function sendOtpEmail(toEmail, firstName, otpCode) {
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:1.5rem 0;">
       <p style="color:#aaa;font-size:0.75rem;text-align:center;">${appName}</p>
     </div>`
-  });
+    });
+  } catch (err) {
+    if (CONNECTION_ERROR_CODES.has(err.code)) {
+      _transporter = null; // Reset so next attempt creates a fresh connection
+    }
+    throw err;
+  }
 }
 
 async function sendResetEmail(toEmail, firstName, resetUrl) {
   const appName = process.env.APP_NAME || 'LGU Naujan PIS';
   const from = process.env.EMAIL_FROM || `"${appName}" <no-reply@naujan.gov.ph>`;
-  await getTransporter().sendMail({
-    from,
-    to: toEmail,
-    subject: `Password Reset — ${appName}`,
-    text: `Hello ${firstName},\n\nYou (or someone) requested a password reset.\n\nClick the link below within 30 minutes:\n\n  ${resetUrl}\n\nIf you did not request this, ignore this email.\n\n— ${appName}`,
-    html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:2rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
+  try {
+    await getTransporter().sendMail({
+      from,
+      to: toEmail,
+      subject: `Password Reset — ${appName}`,
+      text: `Hello ${firstName},\n\nYou (or someone) requested a password reset.\n\nClick the link below within 30 minutes:\n\n  ${resetUrl}\n\nIf you did not request this, ignore this email.\n\n— ${appName}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:2rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
       <h2 style="color:#1a2332;margin-top:0;">Password Reset</h2>
       <p style="color:#555;">Hello <strong>${firstName}</strong>,</p>
       <p style="color:#555;">Click the button below to reset your password:</p>
@@ -70,7 +88,13 @@ async function sendResetEmail(toEmail, firstName, resetUrl) {
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:1.5rem 0;">
       <p style="color:#aaa;font-size:0.75rem;text-align:center;">${appName}</p>
     </div>`
-  });
+    });
+  } catch (err) {
+    if (CONNECTION_ERROR_CODES.has(err.code)) {
+      _transporter = null; // Reset so next attempt creates a fresh connection
+    }
+    throw err;
+  }
 }
 
 module.exports = { sendOtpEmail, sendResetEmail };
